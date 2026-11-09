@@ -1,0 +1,2715 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Zifi Browser — Risograph Audit Print</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@800&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --paper:       #F1EADB;
+      --paper-shade: #E4DAC4;
+      --ink:         #1B1A17;
+      --ink-muted:   #6B6559;
+      --pink:        #FF48B0;
+      --teal:        #00838A;
+      --yellow:      #FFE800;
+
+      --font-display: 'Bricolage Grotesque', 'Syne', sans-serif;
+      --font-body:    'IBM Plex Sans', -apple-system, sans-serif;
+      --font-mono:    'IBM Plex Mono', monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      min-height: 100dvh;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--font-body);
+      font-size: 14px;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Paper grain SVG filter overlay */
+    .paper-grain {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 900;
+      opacity: 0.06;
+      mix-blend-mode: multiply;
+    }
+
+    body.clean-print .paper-grain {
+      display: none;
+    }
+
+    /* Misregistered riso display type */
+    .riso-title {
+      font-family: var(--font-display);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--ink);
+      text-shadow:
+        -1.5px -1px 0 rgba(255, 72, 176, 0.55),
+         1.5px  1px 0 rgba(0, 131, 138, 0.55);
+    }
+
+    body.clean-print .riso-title {
+      text-shadow: none;
+    }
+
+    /* Halftone dot frame helper */
+    .halftone-frame {
+      background-image: radial-gradient(var(--ink) 1px, transparent 1px);
+      background-size: 6px 6px;
+    }
+
+    /* Main 5-element sheet container */
+    .print-sheet {
+      max-width: 1440px;
+      min-height: 100dvh;
+      margin: 0 auto;
+      padding: 12px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    /* 1. MASTHEAD (1 line) */
+    .masthead {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 10px;
+      border-bottom: 1.5px solid var(--ink);
+      flex-shrink: 0;
+    }
+
+    .masthead-left {
+      display: flex;
+      align-items: baseline;
+      gap: 14px;
+    }
+
+    .brand-mark {
+      font-size: clamp(1.6rem, 2.5vw, 2.2rem);
+      line-height: 1;
+      text-transform: uppercase;
+    }
+
+    .edition-tag {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+      padding: 2px 7px;
+      border: 1px solid var(--ink);
+      background: var(--paper-shade);
+    }
+
+    .masthead-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .status-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--ink);
+      padding: 3px 8px;
+      border: 1px solid var(--ink);
+      background: var(--paper-shade);
+    }
+
+    .sq-dot {
+      width: 8px;
+      height: 8px;
+      border: 1px solid var(--ink);
+      background: var(--teal);
+      display: inline-block;
+    }
+
+    .sq-dot.pink {
+      background: var(--pink);
+    }
+
+    .sq-dot.yellow {
+      background: var(--yellow);
+    }
+
+    .settings-btn {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      background: var(--paper);
+      color: var(--ink);
+      border: 1.5px solid var(--ink);
+      padding: 4px 10px;
+      cursor: pointer;
+      box-shadow: 2px 2px 0 var(--ink);
+    }
+
+    .settings-btn:hover {
+      background: var(--yellow);
+    }
+
+    /* Settings Popover */
+    .settings-popover {
+      position: absolute;
+      top: calc(100% + 6px);
+      right: 0;
+      width: 340px;
+      background: var(--paper);
+      border: 1.5px solid var(--ink);
+      box-shadow: 4px 4px 0 var(--ink);
+      padding: 14px;
+      z-index: 300;
+      display: none;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .settings-popover.open {
+      display: flex;
+    }
+
+    .pop-label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--ink-muted);
+    }
+
+    .pop-row {
+      display: flex;
+      gap: 6px;
+    }
+
+    .pop-input, .pop-select {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      padding: 6px 8px;
+      border: 1.5px solid var(--ink);
+      background: #FFFFFF;
+      color: var(--ink);
+      width: 100%;
+    }
+
+    .pop-toggle-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 8px;
+      border-top: 1px dashed var(--ink-muted);
+      font-family: var(--font-mono);
+      font-size: 12px;
+    }
+
+    /* 2. ADDRESS BAR (1 line) */
+    .address-bar {
+      display: grid;
+      grid-template-columns: auto 1fr auto auto auto;
+      border: 1.5px solid var(--ink);
+      background: var(--paper-shade);
+      box-shadow: 3px 3px 0 var(--ink);
+      flex-shrink: 0;
+    }
+
+    .addr-tag {
+      padding: 10px 14px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      background: var(--ink);
+      color: var(--paper);
+      display: flex;
+      align-items: center;
+    }
+
+    .addr-input {
+      border: none;
+      border-right: 1.5px solid var(--ink);
+      padding: 10px 14px;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 500;
+      background: var(--paper);
+      color: var(--ink);
+      outline: none;
+      min-width: 180px;
+    }
+
+    .addr-input:focus {
+      background: #FFFFFF;
+    }
+
+    .addr-preset {
+      border: none;
+      border-right: 1.5px solid var(--ink);
+      padding: 10px 12px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 600;
+      background: var(--paper-shade);
+      color: var(--ink);
+      cursor: pointer;
+      outline: none;
+    }
+
+    .btn-ink {
+      border: none;
+      border-right: 1.5px solid var(--ink);
+      padding: 10px 16px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      background: var(--paper-shade);
+      color: var(--ink);
+      cursor: pointer;
+      transition: background 120ms ease;
+    }
+
+    .btn-ink:hover {
+      background: var(--yellow);
+    }
+
+    .btn-audit {
+      border: none;
+      padding: 10px 22px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      background: var(--pink);
+      color: var(--ink);
+      cursor: pointer;
+      transition: transform 80ms ease, background 120ms ease;
+    }
+
+    .btn-audit:hover:not(:disabled) {
+      background: var(--yellow);
+    }
+
+    .btn-audit:active:not(:disabled) {
+      transform: translate(1px, 1px);
+    }
+
+    .btn-audit:disabled {
+      opacity: 0.6;
+      cursor: wait;
+    }
+
+    /* MAIN WORKSPACE: 9-col Viewport + 3-col Verdict Sheet */
+    .workspace-grid {
+      flex: 1;
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 16px;
+      align-items: stretch;
+      min-height: 440px;
+    }
+
+    /* 3. VIEWPORT (9 cols — larger live target portal) */
+    .viewport-col {
+      grid-column: span 9;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      padding: 6px;
+      border: 1.5px solid var(--ink);
+      box-shadow: 4px 4px 0 var(--ink);
+      position: relative;
+      background-color: var(--paper-shade);
+    }
+
+    .viewport-inner {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      border: 1.5px solid var(--ink);
+      background: var(--paper);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .viewport-strip {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 6px 12px;
+      border-bottom: 1.5px solid var(--ink);
+      background: var(--ink);
+      color: var(--paper);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      flex-shrink: 0;
+    }
+
+    .viewport-strip-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .pass-pill {
+      padding: 1px 7px;
+      font-weight: 600;
+      font-size: 10px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      background: var(--paper-shade);
+      color: var(--ink);
+    }
+
+    .pass-pill.pink {
+      background: var(--pink);
+      color: var(--ink);
+    }
+
+    .pass-pill.teal {
+      background: var(--teal);
+      color: var(--paper);
+    }
+
+    .iframe-stage {
+      flex: 1;
+      position: relative;
+      min-height: 350px;
+      background: var(--paper);
+    }
+
+    .zifi-iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      display: block;
+      background: var(--paper);
+    }
+
+    /* Ordered 4x4 Bayer Dither Canvas & Two-Pass Riso Sweep */
+    .dither-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 180ms ease;
+      z-index: 20;
+    }
+
+    .dither-canvas.active {
+      opacity: 0.42;
+    }
+
+    body.clean-print .dither-canvas {
+      display: none;
+    }
+
+    .ink-roller-bar {
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 6px;
+      top: -10px;
+      pointer-events: none;
+      z-index: 25;
+      opacity: 0;
+    }
+
+    .ink-roller-bar.sweep-pink {
+      background: var(--pink);
+      box-shadow: 0 0 0 1.5px var(--ink);
+      opacity: 1;
+      animation: rollerSweep 600ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    .ink-roller-bar.sweep-teal {
+      background: var(--teal);
+      box-shadow: 0 0 0 1.5px var(--ink);
+      opacity: 1;
+      animation: rollerSweep 600ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    @keyframes rollerSweep {
+      0%   { top: 0%; }
+      100% { top: 100%; }
+    }
+
+    /* ─── AGENT WORK ANIMATION OVERLAY ─────────────────────────────────── */
+    .agent-work-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(27, 26, 23, 0.91);
+      z-index: 50;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 10px;
+      padding: 18px 20px;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 180ms ease;
+    }
+    .agent-work-overlay.visible {
+      opacity: 1;
+    }
+    .agent-work-row {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: #c8c5be;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      animation: agentRowFadeIn 320ms ease both;
+    }
+    .agent-work-row:nth-child(1) { animation-delay: 0ms; }
+    .agent-work-row:nth-child(2) { animation-delay: 80ms; }
+    .agent-work-row:nth-child(3) { animation-delay: 160ms; }
+    .agent-work-row:nth-child(4) { animation-delay: 240ms; }
+    @keyframes agentRowFadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .agent-id {
+      min-width: 92px;
+      color: var(--yellow);
+      font-weight: 600;
+      font-size: 10px;
+    }
+    .agent-id.pink  { color: var(--pink); }
+    .agent-id.teal  { color: var(--teal); }
+    .agent-progress {
+      width: 72px;
+      height: 7px;
+      border: 1px solid #444;
+      position: relative;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .agent-progress-fill {
+      position: absolute;
+      inset: 0 100% 0 0;
+      animation: progressFill 1.4s ease-out forwards;
+    }
+    .agent-progress-fill.pink { background: var(--pink); }
+    .agent-progress-fill.teal { background: var(--teal); }
+    .agent-work-row:nth-child(1) .agent-progress-fill { animation-duration: 1.1s; }
+    .agent-work-row:nth-child(2) .agent-progress-fill { animation-duration: 1.4s; }
+    .agent-work-row:nth-child(3) .agent-progress-fill { animation-duration: 0.9s; }
+    .agent-work-row:nth-child(4) .agent-progress-fill { animation-duration: 1.6s; }
+    @keyframes progressFill {
+      from { right: 100%; }
+      to   { right:   0%; }
+    }
+    .agent-label {
+      flex: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-size: 10.5px;
+    }
+    .agent-cursor {
+      display: inline-block;
+      width: 7px;
+      text-align: center;
+      animation: cursorBlink var(--blink-speed, 700ms) step-end infinite;
+    }
+    .agent-work-row:nth-child(1) .agent-cursor { --blink-speed: 600ms; }
+    .agent-work-row:nth-child(2) .agent-cursor { --blink-speed: 850ms; }
+    .agent-work-row:nth-child(3) .agent-cursor { --blink-speed: 490ms; }
+    .agent-work-row:nth-child(4) .agent-cursor { --blink-speed: 720ms; }
+    @keyframes cursorBlink {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0; }
+    }
+    .agent-work-title {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #888;
+      margin-bottom: 4px;
+    }
+
+    /* 4. VERDICT SHEET (3 cols, compact perforated tear-off receipt) */
+    .verdict-col {
+      grid-column: span 3;
+      min-width: 0;
+      background: var(--paper-shade);
+      border: 1.5px solid var(--ink);
+      box-shadow: 4px 4px 0 var(--ink);
+      padding: 14px 14px 12px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      transform: rotate(-0.5deg);
+    }
+
+    body.clean-print .verdict-col {
+      transform: none;
+    }
+
+    /* Perforated tear-off top edge */
+    .verdict-col::before {
+      content: "";
+      position: absolute;
+      top: -5px;
+      left: 8px;
+      right: 8px;
+      height: 8px;
+      background-image: radial-gradient(var(--paper) 3px, transparent 3px);
+      background-size: 12px 8px;
+      background-repeat: repeat-x;
+      pointer-events: none;
+    }
+
+    .verdict-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 10px;
+      border-bottom: 1.5px solid var(--ink);
+      position: relative;
+    }
+
+    .verdict-title {
+      font-size: 1.25rem;
+      text-transform: uppercase;
+      margin: 0;
+    }
+
+    /* Physical Rubber Ink Stamp in Verdict Section */
+    .stamp-mount {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .verdict-stamp {
+      position: relative;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border: 2px solid var(--ink);
+      background: var(--paper);
+      color: var(--ink);
+      transform: rotate(-3deg);
+      transform-origin: center center;
+      box-shadow: 2px 2px 0 var(--ink);
+      user-select: none;
+      z-index: 5;
+    }
+
+    .verdict-stamp::after {
+      content: "";
+      position: absolute;
+      inset: 2px;
+      border: 1px dashed currentColor;
+      pointer-events: none;
+      opacity: 0.65;
+    }
+
+    .verdict-stamp.running {
+      background: var(--pink);
+      color: var(--ink);
+      border-color: var(--ink);
+      animation: stampSlamPink 380ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    .verdict-stamp.pass {
+      background: var(--teal);
+      color: var(--paper);
+      border: 2.5px solid var(--ink);
+      box-shadow:
+        2px 2px 0 var(--ink),
+        inset 0 0 0 1.5px var(--paper);
+      animation: stampSlamProtected 520ms cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards;
+    }
+
+    /* Expanding ink impact ring when the stamp hits the paper */
+    .stamp-ink-ring {
+      position: absolute;
+      inset: -4px;
+      border: 2px solid var(--teal);
+      pointer-events: none;
+      opacity: 0;
+      z-index: 4;
+    }
+
+    .stamp-ink-ring.burst {
+      animation: inkRingBurst 560ms ease-out forwards;
+    }
+
+    @keyframes stampSlamPink {
+      0% {
+        transform: translateY(-32px) scale(2.6) rotate(-16deg);
+        opacity: 0;
+        box-shadow: 0 22px 20px rgba(27, 26, 23, 0.35);
+      }
+      65% {
+        transform: translateY(0) scale(0.92) rotate(-4deg);
+        opacity: 1;
+        box-shadow: 1px 1px 0 var(--ink);
+      }
+      100% {
+        transform: translateY(0) scale(1) rotate(-5deg);
+        opacity: 1;
+        box-shadow: 2px 2px 0 var(--ink);
+      }
+    }
+
+    @keyframes stampSlamProtected {
+      0% {
+        transform: translateY(-54px) scale(3.4) rotate(-20deg);
+        opacity: 0;
+        filter: blur(1.5px);
+        box-shadow: 0 32px 28px rgba(27, 26, 23, 0.45);
+      }
+      58% {
+        transform: translateY(1px) scale(0.88) rotate(-5.5deg);
+        opacity: 1;
+        filter: blur(0);
+        box-shadow: 1px 1px 0 var(--ink);
+      }
+      78% {
+        transform: translateY(-2px) scale(1.06) rotate(-7.5deg);
+        box-shadow: 3px 3px 0 var(--ink);
+      }
+      100% {
+        transform: translateY(0) scale(1) rotate(-6.5deg);
+        opacity: 1;
+        box-shadow: 2px 2px 0 var(--ink);
+      }
+    }
+
+    @keyframes inkRingBurst {
+      0% {
+        transform: scale(0.85) rotate(-6deg);
+        opacity: 0.9;
+      }
+      100% {
+        transform: scale(1.65) rotate(-6deg);
+        opacity: 0;
+      }
+    }
+
+    .verdict-col.paper-thud {
+      animation: paperThudShake 360ms ease-out;
+    }
+
+    @keyframes paperThudShake {
+      0%   { transform: rotate(-0.6deg) translate(0, 0); }
+      30%  { transform: rotate(-1.2deg) translate(-2px, 3px); }
+      60%  { transform: rotate(0.2deg) translate(2px, -1px); }
+      100% { transform: rotate(-0.6deg) translate(0, 0); }
+    }
+
+    /* 3 Before -> After Rows */
+    .verdict-rows {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin: 10px 0;
+    }
+
+    .v-row {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      padding-bottom: 8px;
+      border-bottom: 1px dashed var(--ink-muted);
+    }
+
+    .v-label {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--ink-muted);
+    }
+
+    .v-numbers {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      font-family: var(--font-mono);
+      font-size: clamp(1.15rem, 1.6vw, 1.4rem);
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+      line-height: 1.15;
+    }
+
+    .num-exposed {
+      color: var(--ink);
+      background: rgba(255, 72, 176, 0.28);
+      padding: 1px 6px;
+      border: 1px solid var(--ink);
+    }
+
+    .num-arrow {
+      font-size: 1rem;
+      color: var(--ink-muted);
+    }
+
+    .num-protected {
+      color: var(--paper);
+      background: var(--teal);
+      padding: 1px 6px;
+      border: 1px solid var(--ink);
+    }
+
+    .dither-placeholder {
+      display: inline-block;
+      color: var(--ink-muted);
+      letter-spacing: 0.1em;
+    }
+
+    /* 1-Sentence LLM Synthesis */
+    .verdict-summary {
+      font-size: 13px;
+      line-height: 1.45;
+      color: var(--ink);
+      background: var(--paper);
+      border: 1px solid var(--ink);
+      padding: 10px 12px;
+      margin-bottom: 10px;
+    }
+
+    /* Conditional Yellow Approval Button */
+    .approval-box {
+      display: none;
+      margin-bottom: 10px;
+    }
+
+    .approval-box.visible {
+      display: block;
+    }
+
+    .btn-approve {
+      width: 100%;
+      padding: 9px 12px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      background: var(--yellow);
+      color: var(--ink);
+      border: 1.5px solid var(--ink);
+      box-shadow: 2px 2px 0 var(--ink);
+      cursor: pointer;
+    }
+
+    .btn-approve:hover:not(:disabled) {
+      background: var(--teal);
+      color: var(--paper);
+    }
+
+    .verdict-foot {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--ink-muted);
+    }
+
+    /* 5. BOTTOM DRAWER (Closed by default, 4 tabs) */
+    .drawer-shell {
+      border: 1.5px solid var(--ink);
+      background: var(--paper-shade);
+      box-shadow: 3px 3px 0 var(--ink);
+      flex-shrink: 0;
+    }
+
+    .drawer-tabs {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--paper-shade);
+      border-bottom: 1.5px solid transparent;
+      flex-wrap: wrap;
+    }
+
+    .drawer-shell.open .drawer-tabs {
+      border-bottom-color: var(--ink);
+    }
+
+    .tab-group {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .drawer-tab {
+      border: none;
+      border-right: 1.5px solid var(--ink);
+      background: var(--paper-shade);
+      color: var(--ink);
+      padding: 8px 16px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+
+    .drawer-tab:hover {
+      background: var(--yellow);
+    }
+
+    .drawer-tab.active {
+      background: var(--ink);
+      color: var(--paper);
+    }
+
+    .drawer-tab.tab-gateway {
+      background: rgba(0, 131, 138, 0.14);
+    }
+
+    .drawer-tab.tab-gateway.active {
+      background: var(--teal);
+      color: var(--paper);
+    }
+
+    .drawer-hint {
+      padding: 0 14px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--ink-muted);
+    }
+
+    .drawer-body {
+      display: none;
+      padding: 16px;
+      background: var(--paper);
+      max-height: 360px;
+      overflow-y: auto;
+    }
+
+    .drawer-shell.open .drawer-body {
+      display: block;
+    }
+
+    .tab-pane {
+      display: none;
+    }
+
+    .tab-pane.active {
+      display: block;
+    }
+
+    /* Tab 1: Traffic Ledger (6 waves) */
+    .ledger-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: var(--font-mono);
+      font-size: 12px;
+    }
+
+    .ledger-table th {
+      text-align: left;
+      padding: 6px 10px;
+      border-bottom: 1.5px solid var(--ink);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--ink-muted);
+    }
+
+    .ledger-table td {
+      padding: 7px 10px;
+      border-bottom: 1px dashed var(--ink-muted);
+      vertical-align: middle;
+    }
+
+    .tag-exposed {
+      display: inline-block;
+      padding: 2px 6px;
+      background: rgba(255, 72, 176, 0.3);
+      border: 1px solid var(--ink);
+      color: var(--ink);
+      font-weight: 500;
+    }
+
+    .tag-gateway {
+      display: inline-block;
+      padding: 2px 6px;
+      background: var(--teal);
+      border: 1px solid var(--ink);
+      color: var(--paper);
+      font-weight: 500;
+    }
+
+    .tag-yellow {
+      display: inline-block;
+      padding: 2px 6px;
+      background: var(--yellow);
+      border: 1px solid var(--ink);
+      color: var(--ink);
+      font-weight: 600;
+    }
+
+    /* Tab 2: Indented Mono Call Tree */
+    .tree-list {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .tree-node {
+      padding: 6px 10px;
+      border: 1px solid var(--ink);
+      background: var(--paper-shade);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .tree-node.pruned {
+      text-decoration: line-through;
+      text-decoration-color: var(--pink);
+      text-decoration-thickness: 2px;
+      background: rgba(255, 72, 176, 0.16);
+    }
+
+    /* Tab 3: Ship It (Proxy env, YAML, Python SDK, PDF) */
+    .ship-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .ship-card {
+      border: 1px solid var(--ink);
+      background: var(--paper-shade);
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .ship-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .ship-pre {
+      margin: 0;
+      padding: 8px;
+      background: var(--paper);
+      border: 1px solid var(--ink);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      overflow-x: auto;
+      white-space: pre;
+    }
+
+    .ship-actions {
+      margin-top: 10px;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    /* Tab 4: Agent Gateway Protection Architecture & Telemetry */
+    .gw-layout {
+      display: grid;
+      grid-template-columns: 7fr 5fr;
+      gap: 16px;
+      align-items: start;
+    }
+
+    .gw-sec-title {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--ink);
+      padding-bottom: 6px;
+      margin-bottom: 10px;
+      border-bottom: 1.5px solid var(--ink);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .gw-pillars {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .gw-pillar-card {
+      border: 1px solid var(--ink);
+      background: var(--paper-shade);
+      padding: 9px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      box-shadow: 2px 2px 0 var(--ink);
+    }
+
+    .gw-pillar-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .gw-pillar-desc {
+      font-size: 12.5px;
+      color: var(--ink-muted);
+      line-height: 1.4;
+    }
+
+    .gw-scene-bar {
+      margin-top: 12px;
+      padding-top: 10px;
+      border-top: 1px dashed var(--ink-muted);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .gw-scene-btn {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      background: var(--paper);
+      color: var(--ink);
+      border: 1px solid var(--ink);
+      padding: 4px 8px;
+      cursor: pointer;
+    }
+
+    .gw-scene-btn:hover {
+      background: var(--yellow);
+    }
+
+    /* Print sheet for PDF export */
+    @media print {
+      .address-bar, .drawer-shell, .settings-btn {
+        display: none !important;
+      }
+      .workspace-grid {
+        display: block;
+      }
+      .verdict-col {
+        transform: none;
+        width: 100%;
+        margin-top: 16px;
+      }
+    }
+
+    @media (max-width: 960px) {
+      .workspace-grid, .gw-layout {
+        grid-template-columns: 1fr;
+      }
+      .viewport-col, .verdict-col {
+        grid-column: span 1;
+        transform: none;
+      }
+      .address-bar {
+        grid-template-columns: 1fr;
+      }
+      .ship-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Uncoated paper grain SVG filter -->
+  <svg class="paper-grain" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+    <filter id="riso-grain">
+      <feTurbulence type="fractalNoise" baseFrequency="0.82" numOctaves="3" stitchTiles="stitch" />
+      <feColorMatrix type="saturate" values="0" />
+    </filter>
+    <rect width="100%" height="100%" filter="url(#riso-grain)" />
+  </svg>
+
+  <div class="print-sheet">
+    <!-- 1. MASTHEAD (1 line — single unified frontend, no :8000 chip) -->
+    <header class="masthead">
+      <div class="masthead-left">
+        <span class="brand-mark riso-title">ZIFI</span>
+        <span class="edition-tag" id="edition-counter">print no. 001</span>
+      </div>
+
+      <div class="masthead-right">
+        <span class="status-chip">
+          <span class="sq-dot" id="groq-dot"></span>
+          <span id="groq-status-text">groq · checking</span>
+        </span>
+        <button type="button" class="settings-btn" id="settings-toggle-btn">SETTINGS</button>
+      </div>
+
+      <!-- Settings Popover (Groq key override + Clean Print mode) -->
+      <div class="settings-popover" id="settings-popover">
+        <div class="pop-label">Groq API Key Override (uses .env by default)</div>
+        <div class="pop-row">
+          <input type="password" id="groq-key-input" class="pop-input" placeholder="gsk_... (optional override)">
+        </div>
+        <div class="pop-row">
+          <select id="groq-model-select" class="pop-select">
+            <option value="llama-3.3-70b-versatile">llama-3.3-70b-versatile</option>
+            <option value="llama-3.1-8b-instant">llama-3.1-8b-instant</option>
+          </select>
+          <button type="button" class="settings-btn" id="save-groq-btn">SAVE</button>
+        </div>
+        <div class="pop-toggle-row">
+          <span>Clean print (hide grain &amp; offset)</span>
+          <input type="checkbox" id="clean-print-toggle">
+        </div>
+      </div>
+    </header>
+
+    <!-- 2. ADDRESS BAR (1 line) -->
+    <section class="address-bar" aria-label="Zifi Browser Target Address Bar">
+      <div class="addr-tag">URL</div>
+      <input
+        type="text"
+        id="zifi-url-input"
+        class="addr-input"
+        value="http://127.0.0.1:8010/targets/aegis-store"
+        aria-label="Target Website URL"
+      >
+      <select id="preset-select" class="addr-preset" aria-label="Target Presets">
+        <option value="http://127.0.0.1:8010/targets/aegis-store" data-project="aegis-commerce">Preset 01 · Aegis Storefront (6 Agents)</option>
+        <option value="http://127.0.0.1:8010/targets/sentinel-console" data-project="sentinel-ops">Preset 02 · Sentinel Cloud Console (6 Agents)</option>
+        <option value="http://127.0.0.1:8010/targets/quant-desk" data-project="quant-pulse">Preset 03 · QuantPulse Trading Desk (6 Agents)</option>
+        <option value="http://127.0.0.1:8010/targets/java-spring-jss" data-project="java-spring-jss">Preset 04 · Java Spring AI + JSS Portal (6 Agents)</option>
+        <option value="https://example.com" data-project="">External · https://example.com (No Agents)</option>
+      </select>
+      <button type="button" class="btn-ink" id="load-url-btn">LOAD</button>
+      <button type="button" class="btn-audit" id="run-audit-btn">RUN AUDIT</button>
+    </section>
+
+    <!-- MAIN WORKSPACE: 8-col Viewport + 4-col Verdict Sheet -->
+    <main class="workspace-grid">
+      <!-- 3. VIEWPORT (8 cols) -->
+      <section class="viewport-col halftone-frame" aria-label="Live Target Viewport">
+        <div class="viewport-inner">
+          <div class="viewport-strip">
+            <div class="viewport-strip-left">
+              <span class="pass-pill" id="viewport-pass-pill">IDLE</span>
+              <span id="viewport-title-text">AEGIS COMMERCE · FLASH SALE PORTAL</span>
+            </div>
+            <span id="viewport-recon-meta">6 AGENTS · 5 TOOLS · READY</span>
+          </div>
+          <div class="iframe-stage">
+            <div class="ink-roller-bar" id="ink-roller-bar"></div>
+            <canvas class="dither-canvas" id="dither-canvas" width="320" height="200"></canvas>
+            <!-- Agent work animation overlay — shown during RUN AUDIT -->
+            <div class="agent-work-overlay" id="agent-work-overlay" aria-hidden="true">
+              <div class="agent-work-title" id="agent-work-pass-label">PASS 1 · EXPOSED SWARM</div>
+              <div class="agent-work-row">
+                <span class="agent-id pink" id="aw-id-0">reader-00</span>
+                <div class="agent-progress"><div class="agent-progress-fill pink" id="aw-bar-0"></div></div>
+                <span class="agent-label" id="aw-label-0">reading catalog endpoints...</span>
+                <span class="agent-cursor">|</span>
+              </div>
+              <div class="agent-work-row">
+                <span class="agent-id pink" id="aw-id-1">writer-01</span>
+                <div class="agent-progress"><div class="agent-progress-fill pink" id="aw-bar-1"></div></div>
+                <span class="agent-label" id="aw-label-1">acquiring inventory lease...</span>
+                <span class="agent-cursor">█</span>
+              </div>
+              <div class="agent-work-row">
+                <span class="agent-id pink" id="aw-id-2">tracer-d2</span>
+                <div class="agent-progress"><div class="agent-progress-fill pink" id="aw-bar-2"></div></div>
+                <span class="agent-label" id="aw-label-2">hopping shipment chain d=4...</span>
+                <span class="agent-cursor">|</span>
+              </div>
+              <div class="agent-work-row">
+                <span class="agent-id pink" id="aw-id-3">policy</span>
+                <div class="agent-progress"><div class="agent-progress-fill pink" id="aw-bar-3"></div></div>
+                <span class="agent-label" id="aw-label-3">evaluating YAML rule set...</span>
+                <span class="agent-cursor">█</span>
+              </div>
+            </div>
+            <iframe
+              id="zifi-iframe"
+              class="zifi-iframe"
+              src="/targets/aegis-store"
+              title="Zifi Live Target Sandbox"
+            ></iframe>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4. VERDICT SHEET (4 cols) -->
+      <aside class="verdict-col" id="verdict-card" aria-label="Audit Verdict Sheet">
+        <div>
+          <div class="verdict-head">
+            <h2 class="verdict-title riso-title">VERDICT</h2>
+            <div class="stamp-mount">
+              <span class="stamp-ink-ring" id="stamp-ink-ring"></span>
+              <span class="verdict-stamp" id="verdict-stamp"> STANDBY </span>
+            </div>
+          </div>
+
+          <div class="verdict-rows">
+            <div class="v-row">
+              <span class="v-label" id="v-label-1">Completed calls (exposed → gateway)</span>
+              <div class="v-numbers" id="metric-completed">
+                <span class="dither-placeholder">░░░░ → ░░░░</span>
+              </div>
+            </div>
+
+            <div class="v-row">
+              <span class="v-label" id="v-label-2">Overload errors 429 (exposed → gateway)</span>
+              <div class="v-numbers" id="metric-errors">
+                <span class="dither-placeholder">░░░░ → ░░░░</span>
+              </div>
+            </div>
+
+            <div class="v-row">
+              <span class="v-label" id="v-label-3">Lost writes (exposed → gateway)</span>
+              <div class="v-numbers" id="metric-lost">
+                <span class="dither-placeholder">░░░░ → ░░░░</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="verdict-summary" id="verdict-summary-text">
+            Paste any target URL and press <strong>RUN AUDIT</strong>. Zifi runs a two-pass print: Fluoro Pink exposes raw multi-agent failures; Teal proves Agent Gateway protection.
+          </div>
+
+          <div class="approval-box" id="approval-box">
+            <button type="button" class="btn-approve" id="approve-action-btn">
+              APPROVE PAUSED ACTION
+            </button>
+          </div>
+        </div>
+
+        <div class="verdict-foot">
+          <span id="llm-honest-line">LLM: checking...</span>
+          <span id="calls-avoided-foot">avoided: --</span>
+        </div>
+      </aside>
+    </main>
+
+    <!-- 5. BOTTOM DRAWER (Closed by default, 5 tabs including 4-PILLAR EVAL & AGENT GATEWAY) -->
+    <section class="drawer-shell" id="drawer-shell">
+      <div class="drawer-tabs">
+        <div class="tab-group">
+          <button type="button" class="drawer-tab" data-tab="traffic" id="tab-btn-traffic">▸ TRAFFIC (0)</button>
+          <button type="button" class="drawer-tab" data-tab="tree" id="tab-btn-tree">▸ TREE</button>
+          <button type="button" class="drawer-tab tab-gateway" data-tab="eval" id="tab-btn-eval">▸ 4-PILLAR EVAL &amp; BENCHMARKS</button>
+          <button type="button" class="drawer-tab" data-tab="ship" id="tab-btn-ship">▸ SHIP IT</button>
+          <button type="button" class="drawer-tab tab-gateway" data-tab="gateway" id="tab-btn-gateway">▸ AGENT GATEWAY</button>
+        </div>
+        <span class="drawer-hint" id="drawer-hint-text">Inspect multi-agent waves, 4-Pillar Security/LLM/Latency Benchmarks, or Agent Gateway protection</span>
+      </div>
+
+      <div class="drawer-body">
+        <!-- Tab 1: Traffic -->
+        <div class="tab-pane" id="pane-traffic">
+          <table class="ledger-table">
+            <thead>
+              <tr>
+                <th>Wave</th>
+                <th>Agent</th>
+                <th>Endpoint</th>
+                <th>Exposed (Pink Pass)</th>
+                <th>Agent Gateway (Teal Pass)</th>
+              </tr>
+            </thead>
+            <tbody id="traffic-tbody">
+              <tr>
+                <td colspan="5" style="color:var(--ink-muted);">Run an audit to record the 6 intercepted multi-agent waves.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Tab 2: Tree -->
+        <div class="tab-pane" id="pane-tree">
+          <div class="tree-list" id="tree-list">
+            <div style="color:var(--ink-muted);font-family:var(--font-mono);font-size:12px;">
+              Run an audit to inspect the 6-agent hierarchy and Groq planning rationales.
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 2.5: 4-Pillar Evaluation & Benchmark Scorecard (App/Latency, OWASP AI Security, Multi-Stack Java/JSS, Eval-Ops) -->
+        <div class="tab-pane" id="pane-eval">
+          <div class="gw-sec-title">
+            <span id="eval-header-title">4-PILLAR EVALUATION &amp; BENCHMARK SCORECARD (01_EVALS · 02_DEPLOY · 03_SECURITY · 04_TELEMETRY)</span>
+            <span class="tag-yellow" id="eval-grade-badge">GRADE: NOT EVALUATED (RUN AUDIT)</span>
+          </div>
+
+          <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;font-family:var(--font-mono);font-size:11px;" id="eval-stack-strip">
+            <span class="tag-yellow">DETECTED STACK: not evaluated</span>
+            <span class="tag-yellow" id="eval-latency-strip">LATENCY WATERFALL: not measured (run audit to measure)</span>
+          </div>
+
+          <table class="ledger-table">
+            <thead>
+              <tr>
+                <th>Pillar &amp; Evaluation Dimension</th>
+                <th>Measured Current State</th>
+                <th>What It Was Lacking (Before)</th>
+                <th>What It Has To Be (Target Benchmark)</th>
+                <th>Status &amp; Module</th>
+              </tr>
+            </thead>
+            <tbody id="eval-benchmarks-tbody">
+              <tr>
+                <td colspan="5" style="color:var(--ink-muted);">Load any URL or press RUN AUDIT to compute the 4-Pillar Evaluation &amp; Benchmark Scorecard.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Tab 3: Ship It -->
+        <div class="tab-pane" id="pane-ship">
+          <div class="ship-grid">
+            <div class="ship-card">
+              <div class="ship-head">
+                <span>1. Proxy Env</span>
+                <button type="button" class="settings-btn" data-copy="snippet-env">COPY</button>
+              </div>
+              <pre class="ship-pre" id="snippet-env">AGENT_GATEWAY_URL=http://127.0.0.1:8010
+UPSTREAM_URL=http://127.0.0.1:8010/targets/aegis-store</pre>
+            </div>
+
+            <div class="ship-card">
+              <div class="ship-head">
+                <span>2. YAML Policy</span>
+                <button type="button" class="settings-btn" data-copy="snippet-yaml">COPY</button>
+              </div>
+              <pre class="ship-pre" id="snippet-yaml">budgets:
+  max_calls: 120
+  max_depth: 3
+read_only_agents:
+  - reader-audit-01</pre>
+            </div>
+
+            <div class="ship-card">
+              <div class="ship-head">
+                <span>3. Python SDK</span>
+                <button type="button" class="settings-btn" data-copy="snippet-sdk">COPY</button>
+              </div>
+              <pre class="ship-pre" id="snippet-sdk">from sdk.client import GatewayClient
+gw = GatewayClient("http://127.0.0.1:8010")
+await gw.call(goal_id="g1", agent_id="a1", tool="read")</pre>
+            </div>
+          </div>
+          <div class="ship-actions">
+            <button type="button" class="settings-btn" id="download-pdf-btn">DOWNLOAD AUDIT PDF</button>
+          </div>
+        </div>
+
+        <!-- Tab 4: Agent Gateway Protection Control Plane Details -->
+        <div class="tab-pane" id="pane-gateway">
+          <div class="gw-layout">
+            <!-- Left column: How Agent Gateway Protects All Information (5 Guardrail Layers) -->
+            <div>
+              <div class="gw-sec-title">
+                <span>HOW AGENT GATEWAY PROTECTS YOUR BACKEND (5 ACTIVE GUARDRAILS)</span>
+                <span class="tag-gateway" id="gw-mode-badge">IN-PROCESS CONTROL PLANE</span>
+              </div>
+
+              <div class="gw-pillars">
+                <div class="gw-pillar-card">
+                  <div class="gw-pillar-top">
+                    <span>01 / ADAPTIVE ADMISSION &amp; FAIR QUEUE (admission.py · scheduler.py)</span>
+                    <span class="tag-gateway" id="gw-pill-admission">CAP: 3 CONCURRENT · 0 429s</span>
+                  </div>
+                  <div class="gw-pillar-desc">
+                    Caps concurrent upstream requests and schedules goals via weighted fair queuing. When 36+ agents burst at once, excess calls wait in a bounded queue instead of triggering <code>429 Too Many Requests</code>.
+                  </div>
+                </div>
+
+                <div class="gw-pillar-card">
+                  <div class="gw-pillar-top">
+                    <span>02 / SINGLEFLIGHT DEDUPLICATION &amp; TTL CACHE (dedup.py)</span>
+                    <span class="tag-gateway" id="gw-pill-dedup">COALESCED: -- · SAVED: --</span>
+                  </div>
+                  <div class="gw-pillar-desc">
+                    Hashes <code>(tool, normalized_payload)</code> so identical in-flight read requests share a single upstream call, and caches recent reads to eliminate redundant LLM sub-agent polling.
+                  </div>
+                </div>
+
+                <div class="gw-pillar-card">
+                  <div class="gw-pillar-top">
+                    <span>03 / FENCED LEASES &amp; VERSIONED CAS STATE (locks.py · state.py)</span>
+                    <span class="tag-gateway" id="gw-pill-locks">LOST WRITES: 0 · FENCED</span>
+                  </div>
+                  <div class="gw-pillar-desc">
+                    Grants expiring leases with monotonically increasing <code>fencing_token</code> numbers and requires <code>If-Match</code> version checks on shared state so concurrent writers never overwrite each other.
+                  </div>
+                </div>
+
+                <div class="gw-pillar-card">
+                  <div class="gw-pillar-top">
+                    <span>04 / GOAL BUDGETS &amp; RECURSION DEPTH BREAKER (budgets.py)</span>
+                    <span class="tag-gateway" id="gw-pill-budgets">MAX DEPTH: d=3 · PRUNED: --</span>
+                  </div>
+                  <div class="gw-pillar-desc">
+                    Tracks parent→child <code>call_id</code> lineage across the entire agent swarm and halts runaway recursive fan-out (`budget_exceeded: max_depth`) before exponential token/API cost explosions.
+                  </div>
+                </div>
+
+                <div class="gw-pillar-card">
+                  <div class="gw-pillar-top">
+                    <span>05 / YAML POLICY ENGINE &amp; HUMAN APPROVAL GATE (policy.py)</span>
+                    <span class="tag-yellow" id="gw-pill-policy">DELETE BLOCKED · >=$100 GATED</span>
+                  </div>
+                  <div class="gw-pillar-desc">
+                    Enforces per-agent tool rules (blocking <code>read_only_agent</code> from <code>DELETE</code> endpoints) and pauses high-value financial actions (`>= $100`) in <code>pending_approval</code> until human sign-off.
+                  </div>
+                </div>
+              </div>
+
+              <!-- Isolated Guardrail Stress Tests -->
+              <div class="gw-scene-bar">
+                <span style="font-family:var(--font-mono);font-size:11px;font-weight:600;color:var(--ink-muted);">TEST INDIVIDUAL GUARDRAIL:</span>
+                <button type="button" class="gw-scene-btn" data-gw-scene="herd">1. Thundering Herd</button>
+                <button type="button" class="gw-scene-btn" data-gw-scene="dedup">2. Singleflight Dedup</button>
+                <button type="button" class="gw-scene-btn" data-gw-scene="locks">3. Fenced Locks</button>
+                <button type="button" class="gw-scene-btn" data-gw-scene="recursion">4. Recursion Cap</button>
+                <button type="button" class="gw-scene-btn" data-gw-scene="policy">5. Policy &amp; Approval</button>
+              </div>
+            </div>
+
+            <!-- Right column: Full Measured Protection Telemetry Table -->
+            <div>
+              <div class="gw-sec-title">
+                <span id="gw-telemetry-title">MEASURED PROTECTION TELEMETRY</span>
+                <span style="color:var(--ink-muted);">EXPOSED vs. GATEWAY</span>
+              </div>
+
+              <table class="ledger-table">
+                <thead>
+                  <tr>
+                    <th>Protection Metric</th>
+                    <th>Exposed</th>
+                    <th>With Gateway</th>
+                  </tr>
+                </thead>
+                <tbody id="gw-telemetry-tbody">
+                  <tr>
+                    <td>Valid Call Completion</td>
+                    <td><span class="tag-exposed">--</span></td>
+                    <td><span class="tag-gateway">--</span></td>
+                  </tr>
+                  <tr>
+                    <td>Client Calls Issued</td>
+                    <td>--</td>
+                    <td>--</td>
+                  </tr>
+                  <tr>
+                    <td>Backend Calls Sent</td>
+                    <td>--</td>
+                    <td>--</td>
+                  </tr>
+                  <tr>
+                    <td>Calls Avoided (Saved)</td>
+                    <td>0</td>
+                    <td><span class="tag-gateway">--</span></td>
+                  </tr>
+                  <tr>
+                    <td>Singleflight Deduplicated</td>
+                    <td>0</td>
+                    <td><span class="tag-gateway">--</span></td>
+                  </tr>
+                  <tr>
+                    <td>Upstream 429 Overload Errors</td>
+                    <td><span class="tag-exposed">--</span></td>
+                    <td><span class="tag-gateway">0</span></td>
+                  </tr>
+                  <tr>
+                    <td>Peak Backend Concurrency</td>
+                    <td>--</td>
+                    <td>--</td>
+                  </tr>
+                  <tr>
+                    <td>Lost Concurrent Writes</td>
+                    <td><span class="tag-exposed">--</span></td>
+                    <td><span class="tag-gateway">0</span></td>
+                  </tr>
+                  <tr>
+                    <td>Recursion Depth Reached</td>
+                    <td>--</td>
+                    <td>--</td>
+                  </tr>
+                  <tr>
+                    <td>Runaway Calls Pruned</td>
+                    <td>0</td>
+                    <td><span class="tag-gateway">--</span></td>
+                  </tr>
+                  <tr>
+                    <td>Policy Violations Blocked</td>
+                    <td>0 (Allowed!)</td>
+                    <td><span class="tag-gateway">--</span></td>
+                  </tr>
+                  <tr>
+                    <td>Latency (p50 / p99)</td>
+                    <td>--</td>
+                    <td>--</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const state = {
+      currentUrl: "http://127.0.0.1:8010/targets/aegis-store",
+      currentProjectId: "aegis-commerce",
+      printCount: 1,
+      lastRun: null,
+      activeDrawerTab: null,
+      pendingApprovalId: null,
+    };
+
+    // 4x4 Bayer ordered dithering matrix
+    const BAYER_4X4 = [
+      [ 0,  8,  2, 10],
+      [12,  4, 14,  6],
+      [ 3, 11,  1,  9],
+      [15,  7, 13,  5],
+    ];
+
+    function paintBayerDither(hexColor, density = 0.5) {
+      const canvas = document.getElementById("dither-canvas");
+      if (!canvas) return;
+      const ctx = canvas.getContext("2d");
+      const w = canvas.width;
+      const h = canvas.height;
+      ctx.clearRect(0, 0, w, h);
+      ctx.fillStyle = hexColor;
+      const threshold = Math.floor(density * 16);
+      const scale = 3;
+      for (let y = 0; y < h; y += scale) {
+        for (let x = 0; x < w; x += scale) {
+          const bayerVal = BAYER_4X4[(y / scale) & 3][(x / scale) & 3];
+          if (bayerVal < threshold) {
+            ctx.fillRect(x, y, scale, scale);
+          }
+        }
+      }
+    }
+
+    function flashDither(hexColor, durationMs = 420) {
+      if (document.body.classList.contains("clean-print")) return;
+      const canvas = document.getElementById("dither-canvas");
+      paintBayerDither(hexColor, 0.45);
+      canvas.classList.add("active");
+      setTimeout(() => {
+        canvas.classList.remove("active");
+      }, durationMs);
+    }
+
+    function triggerRollerSweep(passType) {
+      const bar = document.getElementById("ink-roller-bar");
+      bar.className = "ink-roller-bar";
+      void bar.offsetWidth;
+      bar.classList.add(passType === "pink" ? "sweep-pink" : "sweep-teal");
+    }
+
+    // ── Agent Work Animation ───────────────────────────────────────────────
+    const AGENT_ROWS_PINK = [
+      { id: "reader-00", label: "burst-polling 36× catalog reads...", cursor: "|" },
+      { id: "writer-01", label: "racing 8 unfenced inventory writers...", cursor: "█" },
+      { id: "tracer-d2", label: "expanding shipment tree to depth d=4...", cursor: "|" },
+      { id: "policy",    label: "unchecked DELETE + $280 refund queued...", cursor: "█" },
+    ];
+    const AGENT_ROWS_TEAL = [
+      { id: "reader-00", label: "singleflight: 36→1 coalesced, 0 429s...", cursor: "|" },
+      { id: "writer-01", label: "CAS fencing token applied, 0 lost writes...", cursor: "█" },
+      { id: "tracer-d2", label: "depth pruned at max_depth=3, 8 halted...", cursor: "|" },
+      { id: "policy",    label: "DELETE denied (read_only) · $280 paused...", cursor: "█" },
+    ];
+    const AGENT_ROWS_SCAN = [
+      { id: "recon-01",  label: "probing origin HTTP/2 & TTFB waterfall...", cursor: "|" },
+      { id: "parser-02", label: "scanning DOM & manifests for agents & tools...", cursor: "█" },
+      { id: "sec-ops-03",label: "verifying OWASP LLM01-10 & Agentic ASI01-10...", cursor: "|" },
+      { id: "eval-04",   label: "computing 4-pillar benchmark scores via NumPy...", cursor: "█" },
+    ];
+
+    let _awTypewriterTimers = [];
+
+    function _typewriterAnimate(elId, text, delayMs) {
+      const el = document.getElementById(elId);
+      if (!el) return;
+      el.textContent = "";
+      let i = 0;
+      const timer = setTimeout(function tick() {
+        el.textContent = text.slice(0, i + 1);
+        i++;
+        if (i < text.length) {
+          _awTypewriterTimers.push(setTimeout(tick, 28));
+        }
+      }, delayMs);
+      _awTypewriterTimers.push(timer);
+    }
+
+    function showAgentWorkAnimation(pass) {
+      // Cancel any in-progress typewriter timers
+      _awTypewriterTimers.forEach(clearTimeout);
+      _awTypewriterTimers = [];
+
+      const overlay = document.getElementById("agent-work-overlay");
+      const passLabel = document.getElementById("agent-work-pass-label");
+      if (!overlay) return;
+
+      let rows;
+      let colorClass;
+      if (pass === "scan") {
+        rows = AGENT_ROWS_SCAN;
+        colorClass = "teal";
+        passLabel.textContent = "LIVE AUDIT · 4-PILLAR RECONNAISSANCE";
+      } else if (pass === "teal") {
+        rows = AGENT_ROWS_TEAL;
+        colorClass = "teal";
+        passLabel.textContent = "PASS 2 · AGENT GATEWAY ACTIVE";
+      } else {
+        rows = AGENT_ROWS_PINK;
+        colorClass = "pink";
+        passLabel.textContent = "PASS 1 · EXPOSED SWARM";
+      }
+
+      rows.forEach((row, i) => {
+        const idEl = document.getElementById(`aw-id-${i}`);
+        const barEl = document.getElementById(`aw-bar-${i}`);
+        if (idEl) {
+          idEl.className = `agent-id ${colorClass}`;
+          idEl.textContent = row.id;
+        }
+        if (barEl) {
+          // Reset CSS animation by swapping the element
+          const clone = barEl.cloneNode(true);
+          clone.className = `agent-progress-fill ${colorClass}`;
+          barEl.parentNode.replaceChild(clone, barEl);
+        }
+        // Typewrite each label with staggered delay
+        _typewriterAnimate(`aw-label-${i}`, row.label, i * 90);
+      });
+
+      overlay.classList.add("visible");
+    }
+
+    function hideAgentWorkAnimation() {
+      _awTypewriterTimers.forEach(clearTimeout);
+      _awTypewriterTimers = [];
+      const overlay = document.getElementById("agent-work-overlay");
+      if (overlay) overlay.classList.remove("visible");
+    }
+
+    function escapeHtml(val) {
+      return String(val ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    function formatPct(rateOrPct) {
+      if (rateOrPct == null) return "0.0%";
+      const num = Number(rateOrPct);
+      const pct = num <= 1.0 ? num * 100 : num;
+      return `${pct.toFixed(1)}%`;
+    }
+
+    function computeGatewayValidPct(g) {
+      if (!g) return "100.0%";
+      const total = Number(g.client_calls || 0);
+      const ok = Number(g.successful || 0);
+      const intentionallyStopped =
+        Number(g.depth_denied || 0) +
+        Number(g.policy_denied || 0) +
+        Number(g.approval_pending || 0) +
+        Number(g.budget_cancelled || 0);
+      const validAttempts = Math.max(1, total - intentionallyStopped);
+      const pct = Math.min(100, (ok / validAttempts) * 100);
+      return `${pct.toFixed(1)}%`;
+    }
+
+    function postToTargetIframe(payload) {
+      const frame = document.getElementById("zifi-iframe");
+      if (frame && frame.contentWindow) {
+        frame.contentWindow.postMessage({ type: "ZIFI_WAVE", ...payload }, "*");
+      }
+    }
+
+    async function loadBootState() {
+      try {
+        const res = await fetch("/api/projects");
+        const data = await res.json();
+        updateStatusIndicators(data);
+        const reconRes = await fetch("/api/zifi/recon", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ url: state.currentUrl }),
+        });
+        const reconData = await reconRes.json();
+        if (reconData && reconData.recon) {
+          renderReconAgentsAndTools(reconData.recon);
+          renderEvaluationScorecard(reconData.recon.evaluation_report, reconData.recon);
+        }
+      } catch (_) {
+        document.getElementById("groq-status-text").textContent = "groq · ready";
+      }
+    }
+
+    function updateStatusIndicators(data) {
+      const groq = data.groq || {};
+      const groqDot = document.getElementById("groq-dot");
+      const groqText = document.getElementById("groq-status-text");
+      const llmLine = document.getElementById("llm-honest-line");
+      if (groq.configured) {
+        groqDot.className = "sq-dot";
+        groqText.textContent = `groq · ${groq.model || "llama-3.3-70b"}`;
+        llmLine.textContent = `LLM: groq · ${groq.model || "llama-3.3-70b"} · live`;
+      } else {
+        groqDot.className = "sq-dot pink";
+        groqText.textContent = "groq · fallback";
+        llmLine.textContent = "LLM: LLM unavailable, fell back to scripted";
+      }
+    }
+
+    async function loadTargetUrl(rawUrl, projectIdHint) {
+      const url = (rawUrl || "").trim();
+      if (!url) return;
+      state.currentUrl = url;
+      state.currentProjectId = projectIdHint !== undefined ? projectIdHint : "";
+
+      flashDither("#1B1A17", 280);
+      const frame = document.getElementById("zifi-iframe");
+
+      // Reset audit state back to Standby
+      const passPill = document.getElementById("viewport-pass-pill");
+      passPill.textContent = "IDLE";
+      passPill.className = "pass-pill";
+      triggerVerdictStamp("STANDBY");
+      const lbl1 = document.getElementById("v-label-1");
+      const lbl2 = document.getElementById("v-label-2");
+      const lbl3 = document.getElementById("v-label-3");
+      if (lbl1) lbl1.textContent = "Completed calls (exposed → gateway)";
+      if (lbl2) lbl2.textContent = "Overload errors 429 (exposed → gateway)";
+      if (lbl3) lbl3.textContent = "Lost writes (exposed → gateway)";
+      document.getElementById("metric-completed").innerHTML = `<span class="dither-placeholder">░░░░ → ░░░░</span>`;
+      document.getElementById("metric-errors").innerHTML = `<span class="dither-placeholder">░░░░ → ░░░░</span>`;
+      document.getElementById("metric-lost").innerHTML = `<span class="dither-placeholder">░░░░ → ░░░░</span>`;
+      document.getElementById("verdict-summary-text").textContent =
+        "Paste any target URL and press RUN AUDIT. Zifi runs a two-pass print: Fluoro Pink exposes raw multi-agent failures; Teal proves Agent Gateway protection.";
+      document.getElementById("calls-avoided-foot").textContent = "avoided: --";
+      document.getElementById("approval-box").classList.remove("visible");
+
+      if (url.includes("/targets/sentinel-console")) {
+        state.currentProjectId = "sentinel-ops";
+        frame.src = "/targets/sentinel-console";
+      } else if (url.includes("/targets/quant-desk")) {
+        state.currentProjectId = "quant-pulse";
+        frame.src = "/targets/quant-desk";
+      } else if (url.includes("/targets/java-spring-jss")) {
+        state.currentProjectId = "java-spring-jss";
+        frame.src = "/targets/java-spring-jss";
+      } else if (url.includes("/targets/aegis-store")) {
+        state.currentProjectId = "aegis-commerce";
+        frame.src = "/targets/aegis-store";
+      } else {
+        state.currentProjectId = "";
+        frame.src = `/api/zifi/proxy?url=${encodeURIComponent(url)}`;
+      }
+
+      frame.onload = () => {
+        postToTargetIframe({ type: "ZIFI_RESET" });
+      };
+
+      try {
+        const res = await fetch("/api/zifi/recon", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ url }),
+        });
+        const data = await res.json();
+        if (data.recon) {
+          state.currentProjectId = data.recon.project_id || "";
+          const title = data.recon.title || data.recon.page_title || url;
+          const agents = data.recon.agents_detected || [];
+          const tools = data.recon.tools_detected || data.recon.endpoints || [];
+          const stacks = data.recon.tech_stack || ["HTML5"];
+          document.getElementById("viewport-title-text").textContent = title.toUpperCase();
+          document.getElementById("viewport-recon-meta").textContent =
+            `${agents.length} AGENTS · ${tools.length} TOOLS · ${stacks[0]} · ${data.recon.latency_ms != null ? data.recon.latency_ms + " MS" : "not measured"}`;
+          updateShipItSnippets(url, state.currentProjectId || "external-target");
+          renderReconAgentsAndTools(data.recon);
+          renderEvaluationScorecard(data.recon.evaluation_report, data.recon);
+        }
+      } catch (_) {
+        // Keep current frame title if recon fails
+      }
+    }
+
+    function renderEvaluationScorecard(evalReport, recon) {
+      const rep = evalReport || (recon && recon.evaluation_report);
+      if (!rep) return;
+
+      const gradeBadge = document.getElementById("eval-grade-badge");
+      if (gradeBadge) {
+        if (rep.gateway_effect && rep.gateway_effect.measured) {
+          const gwScore = rep.gateway_effect.score != null ? `${rep.gateway_effect.score}/100` : "MEASURED";
+          const postureScore = rep.site_posture && rep.site_posture.score != null ? `${rep.site_posture.score}/100` : `${rep.overall_score}/100`;
+          gradeBadge.textContent = `GATEWAY: ${gwScore} (${rep.gateway_effect.grade}) · POSTURE: ${postureScore} (conf: ${rep.confidence || 100}%)`;
+        } else if (rep.site_posture && rep.site_posture.score != null) {
+          gradeBadge.textContent = `SITE POSTURE: ${rep.site_posture.score}/100 (${rep.site_posture.grade}) · CONFIDENCE: ${rep.confidence || 0}% · GATEWAY: NOT IN PATH (RECON ONLY)`;
+        } else {
+          gradeBadge.textContent = rep.overall_score != null
+            ? `SCORE: ${rep.overall_score}/100 · ${rep.grade || "EVALUATED"}`
+            : "SCORE: not measured";
+        }
+      }
+
+      const stacks = rep.tech_stack || (recon && recon.tech_stack) || ["HTML5"];
+      const lat = rep.latency_profile || (recon && recon.latency_profile) || {};
+      const stackStrip = document.getElementById("eval-stack-strip");
+      if (stackStrip) {
+        const coldStr = lat.cold_total_ms != null ? `${lat.cold_total_ms}ms` : "not measured";
+        const ttfbStr = lat.ttfb_ms != null ? `${lat.ttfb_ms}ms` : "not measured";
+        const warmStr = lat.warm_p50_ms != null ? `${lat.warm_p50_ms}ms` : "not measured";
+        const burstStr = lat.burst_3x_p95_ms != null ? `${lat.burst_3x_p95_ms}ms` : "not measured";
+        const causeStr = lat.latency_cause || "not measured";
+        stackStrip.innerHTML = `
+          <span class="tag-yellow">DETECTED STACK: ${escapeHtml(stacks.join(" · "))}</span>
+          <span class="tag-gateway">LATENCY WATERFALL: Cold ${escapeHtml(coldStr)} · TTFB ${escapeHtml(ttfbStr)} · Warm p50 ${escapeHtml(warmStr)} · 3× Burst p95 ${escapeHtml(burstStr)} (${escapeHtml(causeStr)})</span>
+        `;
+      }
+
+      const tbody = document.getElementById("eval-benchmarks-tbody");
+      if (!tbody) return;
+      const rows = rep.benchmarks || [];
+      if (rows.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" style="color:var(--ink-muted);">No benchmark rows available.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = rows.map(b => {
+        const st = b.status || "PASS";
+        const badgeClass =
+          st === "PROTECTED" || st === "PASS"
+            ? "tag-gateway"
+            : (st === "WARN" ? "tag-yellow" : "tag-exposed");
+        return `
+          <tr>
+            <td>
+              <strong>${escapeHtml(b.dimension)}</strong>
+              <div style="color:var(--ink-muted);font-size:10.5px;">${escapeHtml(b.pillar)} · <code>${escapeHtml(b.standard_ref)}</code></div>
+            </td>
+            <td style="font-size:11px;">${escapeHtml(b.measured_current)}</td>
+            <td><span class="tag-exposed" style="font-size:11px;">${escapeHtml(b.what_it_was_lacking)}</span></td>
+            <td><span class="tag-gateway" style="font-size:11px;">${escapeHtml(b.what_it_has_to_be)}</span></td>
+            <td>
+              <span class="${badgeClass}">${escapeHtml(st)}</span>
+              <div style="color:var(--ink-muted);font-size:10px;margin-top:2px;"><code>${escapeHtml(b.gateway_module || "")}</code></div>
+            </td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    function renderReconAgentsAndTools(recon) {
+      const agents = recon.agents_detected || [];
+      const tools = recon.tools_detected || recon.endpoints || [];
+      const treeEl = document.getElementById("tree-list");
+      let html = `
+        <div class="tree-node" style="background:var(--paper);">
+          <div>
+            <strong>1. IDENTIFIED AUTONOMOUS AGENTS (${agents.length})</strong>
+            <div style="color:var(--ink-muted);font-size:11px;">
+              ${agents.length === 0
+                ? "0 autonomous agents detected on this URL (no swarm manifest, A2A card, or agent headers)."
+                : agents.map(a => `[${escapeHtml(a.id)}] ${escapeHtml(a.role)}`).join(" · ")}
+            </div>
+          </div>
+          <span class="${agents.length > 0 ? "tag-gateway" : "tag-yellow"}">KIND: AGENT (${agents.length})</span>
+        </div>
+        <div class="tree-node" style="background:var(--paper);">
+          <div>
+            <strong>2. IDENTIFIED CALLABLE TOOLS &amp; ENDPOINTS (${tools.length})</strong>
+            <div style="color:var(--ink-muted);font-size:11px;">
+              ${tools.length === 0
+                ? "0 callable tool endpoints or HTML forms detected on this URL."
+                : tools.map(t => `${escapeHtml(t.method)} ${escapeHtml(t.path)}`).join(" · ")}
+            </div>
+          </div>
+          <span class="${tools.length > 0 ? "tag-gateway" : "tag-yellow"}">KIND: TOOL (${tools.length})</span>
+        </div>
+      `;
+      treeEl.innerHTML = html;
+    }
+
+    function updateShipItSnippets(targetUrl, projectId) {
+      document.getElementById("snippet-env").textContent =
+        `AGENT_GATEWAY_URL=http://127.0.0.1:8010\nUPSTREAM_URL=${targetUrl}`;
+      document.getElementById("snippet-yaml").textContent =
+        `# Project: ${projectId}\nbudgets:\n  max_calls: 120\n  max_depth: 3\nread_only_agents:\n  - reader-audit-01`;
+    }
+
+    function triggerVerdictStamp(mode) {
+      const stamp = document.getElementById("verdict-stamp");
+      const ring = document.getElementById("stamp-ink-ring");
+      const card = document.getElementById("verdict-card");
+      stamp.className = "verdict-stamp";
+      ring.className = "stamp-ink-ring";
+      card.classList.remove("paper-thud");
+      void stamp.offsetWidth;
+
+      if (mode === "pink") {
+        stamp.textContent = "⊗ EXPOSED";
+        stamp.classList.add("running");
+      } else if (mode === "protected") {
+        stamp.textContent = "⊕ PROTECTED";
+        stamp.classList.add("pass");
+        ring.classList.add("burst");
+        card.classList.add("paper-thud");
+      } else {
+        stamp.textContent = mode;
+      }
+    }
+
+    async function runAudit() {
+      const btn = document.getElementById("run-audit-btn");
+      const passPill = document.getElementById("viewport-pass-pill");
+      const url = document.getElementById("zifi-url-input").value.trim() || state.currentUrl;
+
+      btn.disabled = true;
+      btn.textContent = "SCANNING...";
+
+      try {
+        const res = await fetch("/api/zifi/audit", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            url,
+            project_id: state.currentProjectId,
+            prompt: "",
+          }),
+        });
+        const result = await res.json();
+        state.lastRun = result;
+
+        // Task B3: External unowned target — recon only, NO gateway numbers or load tests
+        if (result.audit_status === "external_recon_only" || result.audit_status === "external_url_audit" || result.owned === false) {
+          btn.textContent = "AUDITING...";
+          triggerRollerSweep("teal");
+          flashDither("#00838A", 500);
+          showAgentWorkAnimation("scan");
+          await new Promise(r => setTimeout(r, 680));
+          hideAgentWorkAnimation();
+
+          renderVerdict(result);
+          renderDrawerContents(result);
+          renderEvaluationScorecard(result.evaluation_report, result.zifi_recon);
+          renderGatewayProtectionTab(result);
+
+          state.printCount += 1;
+          document.getElementById("edition-counter").textContent =
+            `print no. ${String(state.printCount).padStart(3, "0")}`;
+          return;
+        }
+
+        // Task B3: Owned target — real bounded proxy load test with measured numbers
+        if (result.audit_status === "owned_target_proxied_audit") {
+          btn.textContent = "PROXIED TEST...";
+          triggerRollerSweep("teal");
+          flashDither("#00838A", 500);
+          showAgentWorkAnimation("teal");
+          await new Promise(r => setTimeout(r, 680));
+          hideAgentWorkAnimation();
+
+          renderVerdict(result);
+          renderDrawerContents(result);
+          renderEvaluationScorecard(result.evaluation_report, result.zifi_recon);
+          renderGatewayProtectionTab(result);
+
+          state.printCount += 1;
+          document.getElementById("edition-counter").textContent =
+            `print no. ${String(state.printCount).padStart(3, "0")}`;
+          return;
+        }
+
+        // Honest verification: if the target URL has 0 active agents, do NOT invent fake metrics
+        if (result.audit_status === "no_agents_detected" || result.has_active_agents === false) {
+          passPill.textContent = "VERIFIED · 0 AGENTS";
+          passPill.className = "pass-pill";
+          triggerVerdictStamp("∅ 0 AGENTS");
+          renderNoAgentsVerdict(result);
+          renderDrawerContents(result);
+          renderEvaluationScorecard(result.evaluation_report, result.zifi_recon);
+          renderGatewayProtectionTab(result);
+          const evalTabBtn = document.getElementById("tab-btn-eval");
+          const shell = document.getElementById("drawer-shell");
+          if (evalTabBtn && shell && !shell.classList.contains("open")) {
+            evalTabBtn.click();
+          }
+          return;
+        }
+
+        const d = result.direct || {};
+        const g = result.gateway || {};
+        const validPct = computeGatewayValidPct(g);
+        const readersCount = d.readers_count || g.readers_count || 36;
+        const writersCount = d.writers_count || g.writers_count || 8;
+
+        // Pass 1: Fluoro Pink sweep (Exposed Swarm)
+        btn.textContent = "PRINTING...";
+        triggerVerdictStamp("pink");
+        passPill.textContent = "PASS 1 · EXPOSED";
+        passPill.className = "pass-pill pink";
+        triggerRollerSweep("pink");
+        flashDither("#FF48B0", 520);
+        showAgentWorkAnimation("pink");
+
+        postToTargetIframe({
+          zone: "zone-read",
+          protected: false,
+          beforeRead: `${readersCount} raw burst polls hitting backend...`,
+          beforeWrite: `${writersCount} unfenced writers racing on counter...`,
+          beforeTrace: "Unbounded 2^d tree expanding to d=4...",
+          beforeApprove: "Unchecked DELETE + high-value refund...",
+          readText: "Waiting for Agent Gateway Pass 2...",
+          writeText: "Waiting for Agent Gateway Pass 2...",
+          traceText: "Waiting for Agent Gateway Pass 2...",
+          approveText: "Waiting for Agent Gateway Pass 2...",
+          pillText: "PINK PASS · EXPOSED FAILURES",
+        });
+
+        // Wait briefly so user sees Pink pass before Teal pass rolls down
+        await new Promise(r => setTimeout(r, 520));
+
+        // Pass 2: Teal sweep + Physical Rubber Stamp Slam (Agent Gateway Protection)
+        passPill.textContent = "PASS 2 · PROTECTED";
+        passPill.className = "pass-pill teal";
+        triggerRollerSweep("teal");
+        flashDither("#00838A", 560);
+        triggerVerdictStamp("protected");
+        showAgentWorkAnimation("teal");
+
+        postToTargetIframe({
+          zone: "zone-approve",
+          protected: true,
+          beforeRead: `${d.upstream_errors ?? 52}× HTTP 429 Overload (${formatPct(d.success_rate)} ok)`,
+          beforeWrite: `${d.lost_updates ?? 3} Lost Writes (final=${d.final_value ?? (writersCount - 3)}/${writersCount})`,
+          beforeTrace: `Ran to depth d=${d.depth_reached ?? 4} (unbounded fan-out)`,
+          beforeApprove: `SECRET DELETED + High-value action ran!`,
+          readText: `${validPct} OK · 0 Errors · ${g.deduplicated ?? 34} coalesced (${g.calls_avoided ?? 44} saved)`,
+          writeText: `${g.final_value ?? writersCount}/${writersCount} Committed · 0 Lost · CAS v${g.cas_version ?? writersCount}`,
+          traceText: `${g.depth_denied ?? 8} Pruned · Stopped at max_depth=${g.depth_limit ?? 3}`,
+          approveText: `DELETE Denied (${g.deny_reason ?? "read_only"}) · Action Paused`,
+          pillText: "TEAL PASS · AGENT GATEWAY ACTIVE",
+        });
+
+        // Let teal animation show for ~600ms, then fade the overlay out
+        await new Promise(r => setTimeout(r, 640));
+        hideAgentWorkAnimation();
+
+        renderVerdict(result);
+        renderDrawerContents(result);
+        renderEvaluationScorecard(result.evaluation_report, result.zifi_recon);
+        renderGatewayProtectionTab(result);
+
+        state.printCount += 1;
+        document.getElementById("edition-counter").textContent =
+          `print no. ${String(state.printCount).padStart(3, "0")}`;
+      } catch (err) {
+        triggerVerdictStamp("ERROR");
+        document.getElementById("verdict-summary-text").textContent =
+          "Audit request failed. Verify the server on :8010 is running.";
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "RUN AUDIT";
+        hideAgentWorkAnimation();
+      }
+    }
+
+    function renderNoAgentsVerdict(result) {
+      const recon = result.zifi_recon || {};
+      const agents = result.agents_detected || recon.agents_detected || [];
+      const tools = result.tools_detected || recon.tools_detected || [];
+      const latStr = recon.latency_ms != null ? `${recon.latency_ms} MS` : "not measured";
+
+      document.getElementById("viewport-recon-meta").textContent =
+        `${agents.length} AGENTS · ${tools.length} TOOLS · ${latStr}`;
+
+      document.getElementById("metric-completed").innerHTML = `
+        <span class="tag-yellow">0 AGENTS</span>
+        <span class="num-arrow">→</span>
+        <span class="tag-yellow">${tools.length} TOOLS</span>
+      `;
+      document.getElementById("metric-errors").innerHTML = `
+        <span class="tag-yellow">0</span>
+        <span class="num-arrow">→</span>
+        <span class="tag-yellow">0</span>
+      `;
+      document.getElementById("metric-lost").innerHTML = `
+        <span class="tag-yellow">0</span>
+        <span class="num-arrow">→</span>
+        <span class="tag-yellow">0</span>
+      `;
+      document.getElementById("verdict-summary-text").textContent =
+        result.executive_summary ||
+        `NOT_DETECTED_STATICALLY: 0 autonomous agents and ${tools.length} callable tools detected on origin. 0 false metrics generated.`;
+      document.getElementById("calls-avoided-foot").textContent = "avoided: not measured (0 agents)";
+      document.getElementById("approval-box").classList.remove("visible");
+    }
+
+    function renderVerdict(result) {
+      const isExternalRecon = (result.audit_status === "external_recon_only" || result.audit_status === "external_url_audit" || result.owned === false);
+      const isOwnedProxied = (result.audit_status === "owned_target_proxied_audit");
+      const d = result.direct || {};
+      const g = result.gateway || {};
+      const recon = result.zifi_recon || {};
+      const lat = recon.latency_profile || d.latency_ms || {};
+      const evalRep = result.evaluation_report || {};
+      const agents = result.agents_detected || recon.agents_detected || [];
+      const tools = result.tools_detected || recon.tools_detected || [];
+
+      if (isExternalRecon) {
+        // External unowned target: strictly recon only, NO gateway load numbers
+        const lbl1 = document.getElementById("v-label-1");
+        const lbl2 = document.getElementById("v-label-2");
+        const lbl3 = document.getElementById("v-label-3");
+        if (lbl1) lbl1.textContent = "Probes & Availability (Origin Live Tested)";
+        if (lbl2) lbl2.textContent = "Tail Latency (Warm p50 → 3× Burst p95)";
+        if (lbl3) lbl3.textContent = "Security & Agent Readiness (4-Pillar Score)";
+
+        const okStr = d.successful != null && d.client_calls != null ? `${d.successful}/${d.client_calls} OK` : "not measured";
+        const ttfbStr = (lat.ttfb_ms != null || d.ttfb_ms != null) ? `TTFB ${lat.ttfb_ms || d.ttfb_ms}ms` : "TTFB not measured";
+        const warmP50Str = lat.warm_p50_ms != null ? `${lat.warm_p50_ms}ms` : (d.latency_ms && d.latency_ms.p50 != null ? `${d.latency_ms.p50}ms` : "not measured");
+        const burstP95Str = lat.burst_3x_p95_ms != null ? `${lat.burst_3x_p95_ms}ms` : (d.latency_ms && d.latency_ms.p95 != null ? `${d.latency_ms.p95}ms` : "not measured");
+        const degRatioStr = lat.degradation_ratio != null ? `(${lat.degradation_ratio}×)` : "";
+        const scoreStr = evalRep.overall_score != null ? `${evalRep.overall_score}/100` : "not measured";
+        const gradeStr = evalRep.grade ? `GRADE ${evalRep.grade}` : "not measured";
+
+        document.getElementById("metric-completed").innerHTML = `
+          <span class="num-exposed">${escapeHtml(okStr)}</span>
+          <span class="num-arrow">·</span>
+          <span class="num-protected">${escapeHtml(ttfbStr)}</span>
+        `;
+
+        document.getElementById("metric-errors").innerHTML = `
+          <span class="num-exposed">${escapeHtml(warmP50Str)}</span>
+          <span class="num-arrow">→</span>
+          <span class="num-protected">${escapeHtml(burstP95Str)} ${escapeHtml(degRatioStr)}</span>
+        `;
+
+        document.getElementById("metric-lost").innerHTML = `
+          <span class="num-exposed">${escapeHtml(scoreStr)}</span>
+          <span class="num-arrow">→</span>
+          <span class="num-protected">${escapeHtml(gradeStr)}</span>
+        `;
+
+        const verdictStamp = document.getElementById("verdict-stamp");
+        if (verdictStamp) {
+          verdictStamp.textContent = "RECON ONLY";
+          verdictStamp.className = "verdict-stamp stamp-teal";
+        }
+
+        const passPill = document.getElementById("viewport-pass-pill");
+        if (passPill) {
+          passPill.textContent = "RECON ONLY · NO LOAD TEST";
+          passPill.className = "pass-pill pass-teal";
+        }
+
+        document.getElementById("verdict-summary-text").textContent = result.executive_summary;
+        document.getElementById("calls-avoided-foot").textContent = "gateway: not in path (recon only)";
+
+        // Never show fake human approval button on external live targets
+        document.getElementById("approval-box").classList.remove("visible");
+        state.pendingApprovalId = null;
+
+        const isLiveGroq = Boolean(result.llm && result.llm.live_llm);
+        const llmModel = (result.llm && result.llm.model) || "llama-3.3-70b-versatile";
+        document.getElementById("llm-honest-line").textContent = isLiveGroq
+          ? `LLM: groq · ${llmModel} · live`
+          : "LLM: LLM unavailable, fell back to scripted";
+
+        const evalTabBtn = document.getElementById("tab-btn-eval");
+        const shell = document.getElementById("drawer-shell");
+        if (evalTabBtn && shell && !shell.classList.contains("open")) {
+          evalTabBtn.click();
+        }
+        return;
+      }
+
+      if (isOwnedProxied) {
+        // Owned target: real measured direct vs proxied load test
+        const lbl1 = document.getElementById("v-label-1");
+        const lbl2 = document.getElementById("v-label-2");
+        const lbl3 = document.getElementById("v-label-3");
+        if (lbl1) lbl1.textContent = "Completed calls (direct → gateway proxy)";
+        if (lbl2) lbl2.textContent = "Overload / errors (direct → gateway proxy)";
+        if (lbl3) lbl3.textContent = "Tail Latency p50 (direct → gateway proxy)";
+
+        const dSuccess = `${d.successful ?? 0}/${d.client_calls ?? 0}`;
+        const gSuccess = `${g.successful ?? 0}/${g.client_calls ?? 0}`;
+        const dErrors = `${d.upstream_errors ?? 0}`;
+        const gErrors = `${g.upstream_errors ?? 0}`;
+        const dP50 = d.latency_ms && d.latency_ms.p50 != null ? `${d.latency_ms.p50}ms` : "--";
+        const gP50 = g.latency_ms && g.latency_ms.p50 != null ? `${g.latency_ms.p50}ms` : "--";
+        const dedupStr = g.deduplicated ? ` (${g.deduplicated} coalesced)` : "";
+
+        document.getElementById("metric-completed").innerHTML = `
+          <span class="num-exposed">${escapeHtml(dSuccess)}</span>
+          <span class="num-arrow">→</span>
+          <span class="num-protected">${escapeHtml(gSuccess)}</span>
+        `;
+
+        document.getElementById("metric-errors").innerHTML = `
+          <span class="num-exposed">${escapeHtml(dErrors)}</span>
+          <span class="num-arrow">→</span>
+          <span class="num-protected">${escapeHtml(gErrors)}</span>
+        `;
+
+        document.getElementById("metric-lost").innerHTML = `
+          <span class="num-exposed">${escapeHtml(dP50)}</span>
+          <span class="num-arrow">→</span>
+          <span class="num-protected">${escapeHtml(gP50)}${escapeHtml(dedupStr)}</span>
+        `;
+
+        const verdictStamp = document.getElementById("verdict-stamp");
+        if (verdictStamp) {
+          verdictStamp.textContent = "PROXIED · MEASURED";
+          verdictStamp.className = "verdict-stamp stamp-teal";
+        }
+
+        const passPill = document.getElementById("viewport-pass-pill");
+        if (passPill) {
+          passPill.textContent = "PROXIED LOAD TEST · MEASURED";
+          passPill.className = "pass-pill pass-teal";
+        }
+
+        document.getElementById("verdict-summary-text").textContent = result.executive_summary;
+        document.getElementById("calls-avoided-foot").textContent = `avoided: ${g.calls_avoided ?? 0} calls (singleflight)`;
+
+        document.getElementById("approval-box").classList.remove("visible");
+        state.pendingApprovalId = null;
+        return;
+      }
+
+      // Reset labels for local multi-agent presets
+      const lbl1 = document.getElementById("v-label-1");
+      const lbl2 = document.getElementById("v-label-2");
+      const lbl3 = document.getElementById("v-label-3");
+      if (lbl1) lbl1.textContent = "Completed calls (exposed → gateway)";
+      if (lbl2) lbl2.textContent = "Overload errors 429 (exposed → gateway)";
+      if (lbl3) lbl3.textContent = "Lost writes (exposed → gateway)";
+
+      const exposedPct = formatPct(d.success_rate);
+      const gatewayPct = computeGatewayValidPct(g);
+
+      document.getElementById("metric-completed").innerHTML = `
+        <span class="num-exposed">${exposedPct}</span>
+        <span class="num-arrow">→</span>
+        <span class="num-protected">${gatewayPct}</span>
+      `;
+
+      document.getElementById("metric-errors").innerHTML = `
+        <span class="num-exposed">${d.upstream_errors ?? 0}</span>
+        <span class="num-arrow">→</span>
+        <span class="num-protected">${g.upstream_errors ?? 0}</span>
+      `;
+
+      document.getElementById("metric-lost").innerHTML = `
+        <span class="num-exposed">${d.lost_updates ?? 0}</span>
+        <span class="num-arrow">→</span>
+        <span class="num-protected">${g.lost_updates ?? 0}</span>
+      `;
+
+      // 1-sentence synthesis from Groq LLM (or deterministic fallback)
+      const llmObj = result.llm || {};
+      const synthObj = llmObj.synthesis || {};
+      const rawSummary = (
+        synthObj.executive_verdict ||
+        result.executive_summary ||
+        g.note ||
+        ""
+      ).trim();
+      const firstSentence = rawSummary.split(/(?<=[.!?])\s+/)[0] ||
+        `Agent Gateway raised valid completion from ${exposedPct} to ${gatewayPct} with 0 overload errors and 0 lost writes.`;
+      document.getElementById("verdict-summary-text").textContent = firstSentence;
+
+      const isLiveGroq = Boolean(llmObj.live_llm);
+      const llmModel = llmObj.model || "llama-3.3-70b-versatile";
+      document.getElementById("llm-honest-line").textContent =
+        isLiveGroq
+          ? `LLM: groq · ${llmModel} · live`
+          : "LLM: LLM unavailable, fell back to scripted";
+
+      document.getElementById("calls-avoided-foot").textContent =
+        `avoided: ${g.calls_avoided ?? 0} calls`;
+
+      // Conditional yellow approval button
+      const appBox = document.getElementById("approval-box");
+      const appBtn = document.getElementById("approve-action-btn");
+      if (g.approval_id && (g.approval_pending ?? 0) > 0) {
+        state.pendingApprovalId = g.approval_id;
+        appBox.classList.add("visible");
+        appBtn.disabled = false;
+        appBtn.textContent = `APPROVE PAUSED ACTION (ID ${String(g.approval_id).slice(0, 6)})`;
+      } else {
+        state.pendingApprovalId = null;
+        appBox.classList.remove("visible");
+      }
+    }
+
+    function renderDrawerContents(result) {
+      const waves = result.network_interceptor || [];
+      document.getElementById("tab-btn-traffic").textContent = `▸ TRAFFIC (${waves.length})`;
+
+      const tbody = document.getElementById("traffic-tbody");
+      if (waves.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" style="color:var(--ink-muted);">0 multi-agent waves recorded — no active agents detected on this target URL.</td></tr>`;
+      } else {
+        tbody.innerHTML = waves.map(w => `
+          <tr>
+            <td>#${escapeHtml(w.wave ?? w.seq)}</td>
+            <td>${escapeHtml(w.agent_id ?? w.agent)}</td>
+            <td><code>${escapeHtml(w.method)} ${escapeHtml(w.endpoint ?? w.url)}</code></td>
+            <td><span class="tag-exposed">${escapeHtml(w.exposed_status ?? w.unprotected_status)}</span></td>
+            <td>${w.gateway_status ? `<span class="tag-gateway">${escapeHtml(w.gateway_status)}</span>` : `<span class="tag-yellow">not measured (recon only)</span>`}</td>
+          </tr>
+        `).join("");
+      }
+
+      const recon = result.zifi_recon || {};
+      const agents = result.agents_detected || recon.agents_detected || [];
+      const tools = result.tools_detected || recon.tools_detected || recon.endpoints || [];
+      const feed = result.agent_feed || [];
+      const planSteps = (result.llm && result.llm.plan && result.llm.plan.execution_steps) || [];
+      const treeEl = document.getElementById("tree-list");
+
+      let html = `
+        <div class="tree-node" style="background:var(--paper);">
+          <div>
+            <strong>1. IDENTIFIED AUTONOMOUS AGENTS (${agents.length})</strong>
+            <div style="color:var(--ink-muted);font-size:11px;">
+              ${agents.length === 0
+                ? "0 autonomous agents identified on this target URL (no swarm manifest, A2A card, or agent headers)."
+                : agents.map(a => `[${escapeHtml(a.id)}] ${escapeHtml(a.role)}`).join(" · ")}
+            </div>
+          </div>
+          <span class="${agents.length > 0 ? "tag-gateway" : "tag-yellow"}">KIND: AGENT (${agents.length})</span>
+        </div>
+        <div class="tree-node" style="background:var(--paper);">
+          <div>
+            <strong>2. IDENTIFIED CALLABLE TOOLS &amp; ENDPOINTS (${tools.length})</strong>
+            <div style="color:var(--ink-muted);font-size:11px;">
+              ${tools.length === 0
+                ? "0 callable tool endpoints or HTML forms identified on this target URL."
+                : tools.map(t => `${escapeHtml(t.method)} ${escapeHtml(t.path)}`).join(" · ")}
+            </div>
+          </div>
+          <span class="${tools.length > 0 ? "tag-gateway" : "tag-yellow"}">KIND: TOOL (${tools.length})</span>
+        </div>
+      `;
+
+      if (planSteps.length > 0) {
+        html += `
+          <div class="tree-node" style="background:var(--paper);">
+            <div>
+              <strong>[groq-orchestrator-plan]</strong> ${escapeHtml((result.llm.plan.mission_summary || "").slice(0, 140))}
+            </div>
+            <span class="tag-gateway">${escapeHtml(result.llm.model || "groq")}</span>
+          </div>
+        `;
+      }
+
+      html += feed.map((item, idx) => {
+        const indent = idx === 0 ? 0 : (idx <= 3 ? 18 : 36);
+        const isPruned = item.status === "budget_exceeded" || item.status === "denied";
+        return `
+          <div class="tree-node ${isPruned ? "pruned" : ""}" style="margin-left:${indent}px">
+            <div>
+              <strong>[${escapeHtml(item.agent_id)}]</strong> ${escapeHtml(item.phase)} · <code>${escapeHtml(item.tool)}</code>
+              <div style="color:var(--ink-muted);font-size:11px;">${escapeHtml(item.detail)}</div>
+            </div>
+            <span class="${isPruned ? "tag-exposed" : "tag-gateway"}">${escapeHtml(item.status)} · ${escapeHtml(item.latency_ms)}ms</span>
+          </div>
+        `;
+      }).join("");
+
+      treeEl.innerHTML = html;
+    }
+
+    function renderGatewayProtectionTab(result) {
+      const d = result.direct || {};
+      const g = result.gateway || {};
+      const exposedPct = formatPct(d.success_rate);
+      const gatewayPct = computeGatewayValidPct(g);
+
+      // Update the 5 Guardrail Pillar badges with live numbers
+      document.getElementById("gw-pill-admission").textContent =
+        `${d.upstream_errors ?? 0} 429s → ${g.upstream_errors ?? 0} 429s (PEAK ${g.peak_upstream_concurrency ?? 3})`;
+      document.getElementById("gw-pill-dedup").textContent =
+        `COALESCED: ${g.deduplicated ?? 0} · SAVED: ${g.calls_avoided ?? 0} CALLS`;
+      document.getElementById("gw-pill-locks").textContent =
+        `LOST WRITES: ${d.lost_updates ?? 0} → ${g.lost_updates ?? 0} (FINAL=${g.final_value ?? g.backend_accepted ?? "--"})`;
+      document.getElementById("gw-pill-budgets").textContent =
+        `MAX DEPTH: d=${g.depth_limit ?? 3} · PRUNED: ${g.depth_denied ?? g.budget_cancelled ?? 0}`;
+      document.getElementById("gw-pill-policy").textContent =
+        `DENIED: ${g.policy_denied ?? 0} · APPROVAL GATED: ${g.approval_pending ?? 0}`;
+
+      document.getElementById("gw-telemetry-title").textContent =
+        `MEASURED PROTECTION TELEMETRY (${(result.name || result.scene || "AUDIT").toUpperCase()})`;
+
+      const dLat = d.latency_ms || {};
+      const gLat = g.latency_ms || {};
+
+      document.getElementById("gw-telemetry-tbody").innerHTML = `
+        <tr>
+          <td>Valid Call Completion</td>
+          <td><span class="tag-exposed">${exposedPct} (${d.successful ?? 0}/${d.client_calls ?? 0})</span></td>
+          <td><span class="tag-gateway">${gatewayPct} (${g.successful ?? 0} ok · ${(g.depth_denied ?? 0) + (g.policy_denied ?? 0) + (g.approval_pending ?? 0)} guarded)</span></td>
+        </tr>
+        <tr>
+          <td>Client Calls Issued</td>
+          <td>${d.client_calls ?? 0}</td>
+          <td>${g.client_calls ?? 0}</td>
+        </tr>
+        <tr>
+          <td>Upstream Backend Calls Sent</td>
+          <td>${d.backend_calls ?? 0}</td>
+          <td><strong>${g.backend_calls ?? 0}</strong></td>
+        </tr>
+        <tr>
+          <td>Calls Avoided (Backend Saved)</td>
+          <td>0</td>
+          <td><span class="tag-gateway">${g.calls_avoided ?? 0} saved</span></td>
+        </tr>
+        <tr>
+          <td>Singleflight &amp; Cache Coalesced</td>
+          <td>0</td>
+          <td><span class="tag-gateway">${g.deduplicated ?? 0} coalesced</span></td>
+        </tr>
+        <tr>
+          <td>Upstream 429 Overload Errors</td>
+          <td><span class="tag-exposed">${d.upstream_errors ?? 0} errors</span></td>
+          <td><span class="tag-gateway">${g.upstream_errors ?? 0} errors</span></td>
+        </tr>
+        <tr>
+          <td>Peak Backend Concurrency</td>
+          <td>${d.peak_upstream_concurrency ?? 0} concurrent</td>
+          <td>${g.peak_upstream_concurrency ?? 0} concurrent (capped)</td>
+        </tr>
+        <tr>
+          <td>Lost Concurrent Writes</td>
+          <td><span class="tag-exposed">${d.lost_updates ?? 0} lost</span></td>
+          <td><span class="tag-gateway">${g.lost_updates ?? 0} lost</span></td>
+        </tr>
+        <tr>
+          <td>Recursion Depth Reached</td>
+          <td>depth ${d.depth_reached ?? 4} (unbounded)</td>
+          <td>depth ${g.depth_limit ?? g.depth_reached ?? 3} (capped)</td>
+        </tr>
+        <tr>
+          <td>Runaway Sub-Agent Calls Pruned</td>
+          <td>0</td>
+          <td><span class="tag-gateway">${(g.depth_denied ?? 0) + (g.budget_cancelled ?? 0)} stopped</span></td>
+        </tr>
+        <tr>
+          <td>Policy Violations Blocked</td>
+          <td><span class="tag-exposed">${d.destructive_allowed ?? 0} destructive ran!</span></td>
+          <td><span class="tag-gateway">${g.policy_denied ?? 0} denied · ${g.approval_pending ?? 0} paused</span></td>
+        </tr>
+        <tr>
+          <td>Latency (p50 / p99)</td>
+          <td>${dLat.p50 ?? 0} ms / ${dLat.p99 ?? 0} ms</td>
+          <td>${gLat.p50 ?? 0} ms / ${gLat.p99 ?? 0} ms</td>
+        </tr>
+      `;
+    }
+
+    async function runIsolatedGatewayScene(sceneId, btnEl) {
+      const prevText = btnEl.textContent;
+      btnEl.textContent = "RUNNING...";
+      btnEl.disabled = true;
+      try {
+        const res = await fetch(`/api/gateway/scenes/${encodeURIComponent(sceneId)}`, {
+          method: "POST",
+        });
+        const data = await res.json();
+        if (data && data.direct && data.gateway) {
+          renderVerdict(data);
+          renderGatewayProtectionTab(data);
+        }
+      } catch (_) {
+        // Ignore transient scene error
+      } finally {
+        btnEl.disabled = false;
+        btnEl.textContent = prevText;
+      }
+    }
+
+    async function approvePausedAction() {
+      if (!state.pendingApprovalId) return;
+      const btn = document.getElementById("approve-action-btn");
+      btn.disabled = true;
+      btn.textContent = "APPROVING...";
+      try {
+        const res = await fetch(`/api/approvals/${encodeURIComponent(state.pendingApprovalId)}/approve`, {
+          method: "POST",
+        });
+        const data = await res.json();
+        if (data.status === "ok" || data.call) {
+          btn.textContent = "APPROVED & EXECUTED ✓";
+          postToTargetIframe({
+            zone: "zone-approve",
+            protected: true,
+            approveText: "GATEWAY: Human Approved & Executed ✓",
+            pillText: "HUMAN APPROVAL COMPLETED",
+          });
+        } else {
+          btn.textContent = `STATUS: ${data.status || "DONE"}`;
+        }
+      } catch (_) {
+        btn.textContent = "APPROVAL ERROR";
+      }
+    }
+
+    // Event wiring
+    document.getElementById("settings-toggle-btn").addEventListener("click", () => {
+      document.getElementById("settings-popover").classList.toggle("open");
+    });
+
+    document.getElementById("clean-print-toggle").addEventListener("change", (e) => {
+      document.body.classList.toggle("clean-print", e.target.checked);
+    });
+
+    document.getElementById("save-groq-btn").addEventListener("click", async () => {
+      const apiKey = document.getElementById("groq-key-input").value.trim();
+      const model = document.getElementById("groq-model-select").value;
+      const res = await fetch("/api/config/groq", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ api_key: apiKey, model }),
+      });
+      const data = await res.json();
+      updateStatusIndicators({ groq: data.groq });
+      document.getElementById("settings-popover").classList.remove("open");
+    });
+
+    document.getElementById("preset-select").addEventListener("change", (e) => {
+      const opt = e.target.selectedOptions[0];
+      const url = e.target.value;
+      const proj = opt ? opt.getAttribute("data-project") : "aegis-commerce";
+      document.getElementById("zifi-url-input").value = url;
+      loadTargetUrl(url, proj);
+    });
+
+    document.getElementById("load-url-btn").addEventListener("click", () => {
+      const url = document.getElementById("zifi-url-input").value;
+      loadTargetUrl(url);
+    });
+
+    document.getElementById("run-audit-btn").addEventListener("click", runAudit);
+    document.getElementById("approve-action-btn").addEventListener("click", approvePausedAction);
+
+    // Drawer tabs (closed by default; clicking active tab closes drawer)
+    document.querySelectorAll(".drawer-tab").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const tab = btn.getAttribute("data-tab");
+        const shell = document.getElementById("drawer-shell");
+        if (state.activeDrawerTab === tab && shell.classList.contains("open")) {
+          shell.classList.remove("open");
+          btn.classList.remove("active");
+          state.activeDrawerTab = null;
+          return;
+        }
+        state.activeDrawerTab = tab;
+        shell.classList.add("open");
+        document.querySelectorAll(".drawer-tab").forEach(b => b.classList.toggle("active", b === btn));
+        document.querySelectorAll(".tab-pane").forEach(p => {
+          p.classList.toggle("active", p.id === `pane-${tab}`);
+        });
+      });
+    });
+
+    // Isolated guardrail scene buttons inside the Agent Gateway tab
+    document.querySelectorAll("[data-gw-scene]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const sceneId = btn.getAttribute("data-gw-scene");
+        if (sceneId) runIsolatedGatewayScene(sceneId, btn);
+      });
+    });
+
+    // Copy buttons in Ship It tab
+    document.querySelectorAll("[data-copy]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const targetId = btn.getAttribute("data-copy");
+        const text = document.getElementById(targetId)?.textContent || "";
+        navigator.clipboard?.writeText(text);
+        const prev = btn.textContent;
+        btn.textContent = "COPIED";
+        setTimeout(() => { btn.textContent = prev; }, 1000);
+      });
+    });
+
+    document.getElementById("download-pdf-btn").addEventListener("click", () => {
+      window.print();
+    });
+
+    loadBootState();
+  </script>
+</body>
+</html>
