@@ -1,0 +1,28 @@
+# Agent Gateway policy for the local demo.
+# Rules are evaluated in order; the first match wins.
+version: 1
+default: allow
+
+# Tools that count as writes for quotas.
+write_tools: [write, guarded_write, delete, refund]
+
+rules:
+  - name: read-only-agents-cannot-mutate
+    agents: ["reader-*", "readonly-*"]
+    tools: [write, guarded_write, delete, refund]
+    decision: deny
+    reason: read_only_agent
+
+  - name: high-value-refund-needs-approval
+    agents: ["support-*"]
+    tools: [refund]
+    decision: require_approval
+    reason: high_value_refund
+    when:
+      field: amount
+      gte: 100
+
+# Per-agent write ceilings. Each demo writer performs one write, so this is
+# mainly a guardrail; tests exercise it directly.
+write_quotas:
+  "writer-*": 25
