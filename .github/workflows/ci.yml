@@ -45,5 +45,5 @@ jobs:
 
     - name: Run benchmark verification
       run: |
-        python demo/benchmark.py --quick --seed 42
+        python -m demo.benchmark --quick --seed 42
 

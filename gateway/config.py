@@ -1,4 +1,4 @@
-"""config.py — Gateway Environment Configuration and Defaults (Task B6).
+"""config.py — Gateway Environment Configuration and Defaults.
 
 Configures:
 - Admission limiter thresholds (initial, max, queue limits).

@@ -2048,7 +2048,7 @@ await gw.call(goal_id="g1", agent_id="a1", tool="read")</pre>
         const result = await res.json();
         state.lastRun = result;
 
-        // Task B3: External unowned target — recon only, NO gateway numbers or load tests
+        // External unowned target — recon only, NO gateway numbers or load tests
         if (result.audit_status === "external_recon_only" || result.audit_status === "external_url_audit" || result.owned === false) {
           btn.textContent = "AUDITING...";
           triggerRollerSweep("teal");
@@ -2068,7 +2068,7 @@ await gw.call(goal_id="g1", agent_id="a1", tool="read")</pre>
           return;
         }
 
-        // Task B3: Owned target — real bounded proxy load test with measured numbers
+        // Owned target — real bounded proxy load test with measured numbers
         if (result.audit_status === "owned_target_proxied_audit") {
           btn.textContent = "PROXIED TEST...";
           triggerRollerSweep("teal");

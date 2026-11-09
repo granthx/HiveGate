@@ -1,4 +1,4 @@
-"""llm_swarm.py — Real LLM Swarm and Scripted Fallback Runner (Task B7).
+"""llm_swarm.py — Real LLM Swarm and Scripted Fallback Runner.
 
 Features:
 1. Dual-mode execution: 'llm' (Groq LLM-driven agent tool calling) vs 'scripted' (deterministic).

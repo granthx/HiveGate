@@ -47,7 +47,7 @@ STATUS_WEIGHTS: dict[str, int] = {
     "LACKING": 38,
 }
 
-# Evidence confidence weights (Task B5: Unknown evidence lowers confidence)
+# Evidence confidence weights (Unknown evidence lowers confidence)
 EVIDENCE_CONFIDENCE_WEIGHTS: dict[str, float] = {
     "MEASURED": 1.0,
     "DETECTED": 0.85,
@@ -258,7 +258,7 @@ def four_pillar_score(benchmark_statuses: Sequence[str], has_gateway_run: bool =
 def compute_evidence_confidence(evidence_kinds: Sequence[str]) -> float:
     """Compute confidence percentage (0.0–100.0) from labelled evidence kinds.
 
-    Task B5 requirement:
+    Evaluation requirement:
     - Pure function of labelled evidence.
     - Unknown evidence lowers confidence, it does not raise the score.
     """
@@ -274,7 +274,7 @@ def evaluate_site_posture(
 ) -> dict[str, object]:
     """Compute site posture score, grade, and confidence independently from gateway effects.
 
-    Task B5 requirement:
+    Evaluation requirement:
     - Separate 'site posture' (headers, rate-limit hints) from 'gateway effect'.
     - Never mix them in one score.
     """
@@ -306,7 +306,7 @@ def evaluate_gateway_effect(
 ) -> dict[str, object]:
     """Compute gateway effect scorecard independently from passive site posture.
 
-    Task B5 requirement:
+    Evaluation requirement:
     - If unmeasured: returns measured=False, score=None, grade="NOT MEASURED".
     - If measured: reports real runtime score, grade, and delta metrics.
     """

@@ -1,4 +1,4 @@
-"""store.py — Shared Storage Interface with Redis and In-Memory Fallback (Task B6).
+"""store.py — Shared Storage Interface with Redis and In-Memory Fallback.
 
 Provides an abstract interface and concrete implementations for:
 1. Expiring leased locks with monotonically increasing fencing tokens.

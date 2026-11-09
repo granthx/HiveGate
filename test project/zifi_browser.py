@@ -343,7 +343,7 @@ def detect_multi_stack_and_surfaces(
     detected_stacks.extend(java_extensions)
     detected_stacks.extend(jss_and_ui_libs)
 
-    # --- B1. Parse JSON Manifests (OpenAPI 3.x / Swagger 2.0 / MCP / A2A) ---
+    # --- 1. Parse JSON Manifests (OpenAPI 3.x / Swagger 2.0 / MCP / A2A) ---
     trimmed = html_body.strip()
     if (trimmed.startswith("{") and trimmed.endswith("}")) or (trimmed.startswith("[") and trimmed.endswith("]")):
         try:
@@ -642,7 +642,7 @@ def build_four_pillar_evaluation(
 ) -> dict[str, Any]:
     """Build the 4-Pillar Evaluation & Benchmark Scorecard grounded in the 4 reference guides.
 
-    Truthfulness rules (B1):
+    Truthfulness rules:
     - Never substitute silent numeric defaults (no 4.2ms, 52, 142ms, 8, 3, 44, 0.333).
     - If a metric is unmeasured (None), render 'not measured' and status 'UNKNOWN'.
     - A benchmark row may only be 'PROTECTED' if a real gateway run measured that row's metric.

@@ -5,10 +5,16 @@ from __future__ import annotations
 import argparse
 import asyncio
 import json
+import os
+import sys
 import time
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
+
+_repo_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+if _repo_root not in sys.path:
+    sys.path.insert(0, _repo_root)
 
 from demo.scenes import (
     PRICE_PER_CALL_USD,

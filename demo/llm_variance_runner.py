@@ -1,4 +1,4 @@
-"""llm_variance_runner.py — 5-Trial Variance and Distribution Benchmark (Task B7).
+"""llm_variance_runner.py — 5-Trial Variance and Distribution Benchmark.
 
 Executes the exact same goal 5 times across LLM or scripted swarm runs and
 reports variance, min, median, max for:

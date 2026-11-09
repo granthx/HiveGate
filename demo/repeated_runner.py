@@ -1,11 +1,11 @@
-"""repeated_runner.py — Defensible pass^k Repeated-Trial Benchmark Runner (Task B5).
+"""repeated_runner.py — Defensible pass^k Repeated-Trial Benchmark Runner.
 
-Runs the full Agent Gateway benchmark across k >= 5 distinct deterministic seeds to:
+Runs the full HiveGate benchmark across k >= 5 distinct deterministic seeds to:
 1. Measure true variance (min, median, max, standard deviation) for latencies and success rates.
 2. Eliminate timing-nondeterminism claims by reporting distribution envelopes rather than single runs.
 3. Compute pass^k (fraction of trials where ALL operations succeeded with 0 errors and 0 lost updates).
 
-Per 01_EVALUATIONS_AND_OPS.md §4.2:
+Reliability rule:
 "Rule: for agents always report pass^k (all k attempts succeed), not just pass@k (any of k succeeds).
 pass^k is what users experience."
 """
