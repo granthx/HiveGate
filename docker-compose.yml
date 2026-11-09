@@ -1,0 +1,59 @@
+version: "3.8"
+
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: agent-gateway-redis
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    restart: unless-stopped
+
+  gateway:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: agent-gateway-core
+    ports:
+      - "8000:8000"
+    environment:
+      - REDIS_URL=redis://redis:6379/0
+      - AGENT_GATEWAY_UPSTREAM=http://backend:8020
+      - AGENT_GATEWAY_FAILURE_POLICY=fail-closed
+      - AGENT_GATEWAY_ADMISSION_INITIAL=4
+      - AGENT_GATEWAY_ADMISSION_MAX=32
+      - AGENT_GATEWAY_ADMISSION_QUEUE_LIMIT=100
+      - AGENT_GATEWAY_JSON_LOGS=1
+      - AGENT_GATEWAY_METRICS_ENABLED=1
+    depends_on:
+      redis:
+        condition: service_healthy
+      backend:
+        condition: service_started
+    command: ["uvicorn", "gateway.main:app", "--host", "0.0.0.0", "--port", "8000"]
+    restart: unless-stopped
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: agent-gateway-demo-backend
+    ports:
+      - "8020:8020"
+    command: ["python", "demo/fragile_backend.py", "--port", "8020"]
+    restart: unless-stopped
+
+  ui:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: agent-gateway-ui
+    ports:
+      - "8010:8010"
+    command: ["python", "test project/server.py", "--port", "8010"]
+    restart: unless-stopped
+
