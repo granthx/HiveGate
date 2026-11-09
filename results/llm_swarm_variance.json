@@ -1,0 +1,809 @@
+{
+  "timestamp": "2026-11-08T17:11:46Z",
+  "goal_prompt": "Triage flash-sale customer escalations and reconcile hot order inventory records.",
+  "mode": "scripted",
+  "llm_status": "LLM unavailable, fell back to scripted",
+  "fallback_reason": "LLM unavailable, fell back to scripted (HTTPStatusError)",
+  "num_trials": 5,
+  "distributions": {
+    "calls_made": {
+      "min": 10.0,
+      "median": 10.0,
+      "max": 10.0,
+      "variance": 0.0
+    },
+    "duplicates_avoided": {
+      "min": 3.0,
+      "median": 3.0,
+      "max": 6.0,
+      "variance": 2.0
+    },
+    "denials": {
+      "min": 0.0,
+      "median": 0.0,
+      "max": 0.0,
+      "variance": 0.0
+    },
+    "tokens": {
+      "min": 0.0,
+      "median": 0.0,
+      "max": 0.0,
+      "variance": 0.0
+    },
+    "cost_usd": {
+      "min": 0.0,
+      "median": 0.0,
+      "max": 0.0,
+      "variance": 0.0
+    }
+  },
+  "trials": [
+    {
+      "goal_id": "trial-goal-1",
+      "mode": "scripted",
+      "llm_status": "LLM unavailable, fell back to scripted",
+      "fallback_reason": "LLM unavailable, fell back to scripted (HTTPStatusError)",
+      "duration_ms": 313.6,
+      "tokens": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0,
+        "cost_usd": 0.0,
+        "source": "none"
+      },
+      "calls_made": 10,
+      "calls_avoided": 6,
+      "denials": 0,
+      "successful_calls": 10,
+      "traces": [
+        {
+          "agent_id": "agent-000",
+          "tool": "read",
+          "payload": {
+            "record": "record-1"
+          },
+          "status": "ok",
+          "reason": null,
+          "call_id": "6e0ecf3dfff046fa990fd1d09364f3f0",
+          "approval_id": null,
+          "duration_ms": 8.41,
+          "thought": ""
+        },
+        {
+          "agent_id": "agent-003",
+          "tool": "read",
+          "payload": {
+            "record": "record-1"
+          },
+          "status": "ok",
+          "reason": null,
+          "call_id": "2a436e4d4c104d65879915c8d3a1aaf7",
+          "approval_id": null,
+          "duration_ms": 4.71,
+          "thought": ""
+        },
+        {
+          "agent_id": "agent-005",
+          "tool": "read",
+          "payload": {
+            "record": "record-1"
+          },
+          "status": "ok",
+          "reason": null,
+          "call_id": "fbda94a52ff847979b49540adb2f4e96",
+          "approval_id": null,
+          "duration_ms": 4.48,
+          "thought": ""
+        },
+        {
+          "agent_id": "agent-007",
+          "tool": "read",
+          "payload": {
+            "record": "record-1"
+          },
+          "status": "ok",
+          "reason": null,
+          "call_id": "db8e1571ab354c328d4be9fccbfd3ac2",
+          "approval_id": null,
+          "duration_ms": 4.27,
+          "thought": ""
+        },
+        {
+          "agent_id": "agent-001",
+          "tool": "write",
+          "payload": {
+            "record": "hot",
+            "delta": 1
+          },
+          "status": "ok",
+          "reason": null,
+          "call_id": "a3d9c730bb5d44f08864c66f7a42b273",
+          "approval_id": null,
+          "duration_ms": 17.91,
+          "thought": ""
+        },
+        {
+          "agent_id": "agent-002",
+          "tool": "read",
+          "payload": {
+            "record": "record-2"
+          },
+          "status": "ok",
+          "reason": null,
+          "call_id": "877de1250da8404fb68a6751a5ed725d",
+          "approval_id": null,
+          "duration_ms": 17.33,
+          "thought": ""
+        },
+        {
+          "agent_id": "agent-006",
+          "tool": "read",
+          "payload": {
+            "record": "record-3"
+          },
+          "status": "ok",
+          "reason": null,
+          "call_id": "e033d431d56e4b09a0953975693e6f8f",
+          "approval_id": null,
+          "duration_ms": 16.81,
+          "thought": ""
+        },
+        {
+          "agent_id": "agent-004",
+          "tool": "read",
+          "payload": {
+            "record": "record-2"
+          },
+          "status": "ok",
+          "reason": null,
+          "call_id": "d9f6fb12f63b4c58ba0bd73b130fa741",
+          "approval_id": null,
+          "duration_ms": 17.21,
+          "thought": ""
+        },
+        {
+          "agent_id": "agent-009",
+          "tool": "read",
+          "payload": {
+            "record": "record-2"
+          },
+          "status": "ok",
+          "reason": null,
+          "call_id": "87332edbab73407bb2d57486418e17af",
+          "approval_id": null,
+          "duration_ms": 13.72,
+          "thought": ""
+        },
+        {
+          "agent_id": "agent-008",
+          "tool": "read",
+          "payload": {
+            "record": "record-3"
+          },
+          "status": "ok",
+          "reason": null,
+          "call_id": "89010b51c9e3429cb08ebf8b4da57be4",
+          "approval_id": null,
+          "duration_ms": 14.07,
+          "thought": ""
+        }
+      ],
+      "schema_errors": []
+    },
+    {
+      "goal_id": "trial-goal-2",
+      "mode": "scripted",
+      "llm_status": "LLM unavailable, fell back to scripted",
+      "fallback_reason": "LLM unavailable, fell back to scripted (HTTPStatusError)",
+      "duration_ms": 279.8,
+      "tokens": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0,
+        "cost_usd": 0.0,
+        "source": "none"
+      },
+      "calls_made": 10,
+      "calls_avoided": 5,
+      "denials": 0,
+      "successful_calls": 10,
+      "traces": [
+        {
+          "agent_id": "agent-000",
+          "tool": "read",
+          "payload": {
+            "record": "record-2"
+          },
+          "status": "ok",
+          "reason": null,
+          "call_id": "17ab96dfd5324bbfb30f7d7e4adafcb4",
+          "approval_id": null,
+          "duration_ms": 0.63,
+          "thought": ""
+        },
+        {
+          "agent_id": "agent-001",
+          "tool": "read",
+          "payload": {
+            "record": "record-1"
+          },
+          "status": "ok",
+          "reason": null,
+          "call_id": "63514bce33e041d4ae8cf12cb5c7d2cd",
+          "approval_id": null,
+          "duration_ms": 0.47,
+          "thought": ""
+        },
+        {
+          "agent_id": "agent-002",
+          "tool": "read",
+          "payload": {
+            "record": "record-3"
+          },
+          "status": "ok",
+          "reason": null,
+          "call_id": "ae17fab9fe2b487dbf498477429fc129",
+          "approval_id": null,
+          "duration_ms": 0.37,
+          "thought": ""
+        },
+        {
+          "agent_id": "agent-004",
+          "tool": "read",
+          "payload": {
+            "record": "record-1"
+          },
+          "status": "ok",
+          "reason": null,
+          "call_id": "4011884f544043869e7f5a4a0be2e3ed",
+          "approval_id": null,
+          "duration_ms": 0.32,
+          "thought": ""
+        },
+        {
+          "agent_id": "agent-005",
+          "tool": "read",
+          "payload": {
+            "record": "record-3"
+          },
+          "status": "ok",
+          "reason": null,
+          "call_id": "daa01bdc2f344e84acdbf4d2d9cffc8c",
+          "approval_id": null,
+          "duration_ms": 0.31,
+          "thought": ""
+        },
+        {
+          "agent_id": "agent-006",
+          "tool": "read",
+          "payload": {
+            "record": "record-1"
+          },
+          "status": "ok",
+          "reason": null,
+          "call_id": "f53b6bd097e448dc916fb5bb33db5367",
+          "approval_id": null,
+          "duration_ms": 0.31,
+          "thought": ""
+        },
+        {
+          "agent_id": "agent-008",
+          "tool": "read",
+          "payload": {
+            "record": "record-3"
+          },
+          "status": "ok",
+          "reason": null,
+          "call_id": "e876a8209d534a6daf7eaebcb32d17a4",
+          "approval_id": null,
+          "duration_ms": 0.3,
+          "thought": ""
+        },
+        {
+          "agent_id": "agent-003",
+          "tool": "read",
+          "payload": {
+            "record": "record-0"
+          },
+          "status": "ok",
+          "reason": null,
+          "call_id": "e9f82d1f2dd24cda9489b8a62eada616",
+          "approval_id": null,
+          "duration_ms": 5.69,
+          "thought": ""
+        },
+        {
+          "agent_id": "agent-007",
+          "tool": "read",
+          "payload": {
+            "record": "record-0"
+          },
+          "status": "ok",
+          "reason": null,
+          "call_id": "9daee4bc6e0a466b9d346e319d32b475",
+          "approval_id": null,
+          "duration_ms": 4.42,
+          "thought": ""
+        },
+        {
+          "agent_id": "agent-009",
+          "tool": "write",
+          "payload": {
+            "record": "hot",
+            "delta": 1
+          },
+          "status": "ok",
+          "reason": null,
+          "call_id": "ead32dcf67a6465c88fdebc14e779d07",
+          "approval_id": null,
+          "duration_ms": 20.1,
+          "thought": ""
+        }
+      ],
+      "schema_errors": []
+    },
+    {
+      "goal_id": "trial-goal-3",
+      "mode": "scripted",
+      "llm_status": "LLM unavailable, fell back to scripted",
+      "fallback_reason": "LLM unavailable, fell back to scripted (HTTPStatusError)",
+      "duration_ms": 312.9,
+      "tokens": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0,
+        "cost_usd": 0.0,
+        "source": "none"
+      },
+      "calls_made": 10,
+      "calls_avoided": 3,
+      "denials": 0,
+      "successful_calls": 10,
+      "traces": [
+        {
+          "agent_id": "agent-001",
+          "tool": "read",
+          "payload": {
+            "record": "record-1"
+          },
+          "status": "ok",
+          "reason": null,
+          "call_id": "391d58b9f8aa41cf942d6c02efffb3e4",
+          "approval_id": null,
+          "duration_ms": 0.46,
+          "thought": ""
+        },
+        {
+          "agent_id": "agent-002",
+          "tool": "read",
+          "payload": {
+            "record": "record-0"
+          },
+          "status": "ok",
+          "reason": null,
+          "call_id": "7c850c3d6b2f4518a7f2d6f3a86611d2",
+          "approval_id": null,
+          "duration_ms": 0.39,
+          "thought": ""
+        },
+        {
+          "agent_id": "agent-003",
+          "tool": "read",
+          "payload": {
+            "record": "record-3"
+          },
+          "status": "ok",
+          "reason": null,
+          "call_id": "af8a0e70707d46eeb68cee8282ffa010",
+          "approval_id": null,
+          "duration_ms": 0.37,
+          "thought": ""
+        },
+        {
+          "agent_id": "agent-006",
+          "tool": "read",
+          "payload": {
+            "record": "record-0"
+          },
+          "status": "ok",
+          "reason": null,
+          "call_id": "43c5b66f4e4046c39ec72bad23451df7",
+          "approval_id": null,
+          "duration_ms": 0.37,
+          "thought": ""
+        },
+        {
+          "agent_id": "agent-007",
+          "tool": "read",
+          "payload": {
+            "record": "record-0"
+          },
+          "status": "ok",
+          "reason": null,
+          "call_id": "29a881f9ab324f47bb3b0ee1e479619b",
+          "approval_id": null,
+          "duration_ms": 0.34,
+          "thought": ""
+        },
+        {
+          "agent_id": "agent-008",
+          "tool": "read",
+          "payload": {
+            "record": "record-0"
+          },
+          "status": "ok",
+          "reason": null,
+          "call_id": "e6b806d6adc042bf8e8a7e5a36151b40",
+          "approval_id": null,
+          "duration_ms": 0.35,
+          "thought": ""
+        },
+        {
+          "agent_id": "agent-009",
+          "tool": "read",
+          "payload": {
+            "record": "record-2"
+          },
+          "status": "ok",
+          "reason": null,
+          "call_id": "5236075a35cb44edbd7440711df6b341",
+          "approval_id": null,
+          "duration_ms": 0.34,
+          "thought": ""
+        },
+        {
+          "agent_id": "agent-000",
+          "tool": "write",
+          "payload": {
+            "record": "hot",
+            "delta": 1
+          },
+          "status": "ok",
+          "reason": null,
+          "call_id": "75f237e689b34b2d910c89851036e756",
+          "approval_id": null,
+          "duration_ms": 17.46,
+          "thought": ""
+        },
+        {
+          "agent_id": "agent-004",
+          "tool": "write",
+          "payload": {
+            "record": "hot",
+            "delta": 1
+          },
+          "status": "ok",
+          "reason": null,
+          "call_id": "2a57f2285c6a4738909880c013b895a0",
+          "approval_id": null,
+          "duration_ms": 30.49,
+          "thought": ""
+        },
+        {
+          "agent_id": "agent-005",
+          "tool": "write",
+          "payload": {
+            "record": "hot",
+            "delta": 1
+          },
+          "status": "ok",
+          "reason": null,
+          "call_id": "9203082ce77c4b2797f3bdb1d494189e",
+          "approval_id": null,
+          "duration_ms": 30.25,
+          "thought": ""
+        }
+      ],
+      "schema_errors": []
+    },
+    {
+      "goal_id": "trial-goal-4",
+      "mode": "scripted",
+      "llm_status": "LLM unavailable, fell back to scripted",
+      "fallback_reason": "LLM unavailable, fell back to scripted (HTTPStatusError)",
+      "duration_ms": 312.7,
+      "tokens": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0,
+        "cost_usd": 0.0,
+        "source": "none"
+      },
+      "calls_made": 10,
+      "calls_avoided": 3,
+      "denials": 0,
+      "successful_calls": 10,
+      "traces": [
+        {
+          "agent_id": "agent-002",
+          "tool": "read",
+          "payload": {
+            "record": "record-1"
+          },
+          "status": "ok",
+          "reason": null,
+          "call_id": "7c337d7ba77b476c88ed2f110a773bea",
+          "approval_id": null,
+          "duration_ms": 0.3,
+          "thought": ""
+        },
+        {
+          "agent_id": "agent-003",
+          "tool": "read",
+          "payload": {
+            "record": "record-0"
+          },
+          "status": "ok",
+          "reason": null,
+          "call_id": "8e32a1c422544649bcff45e20c6a809f",
+          "approval_id": null,
+          "duration_ms": 0.27,
+          "thought": ""
+        },
+        {
+          "agent_id": "agent-004",
+          "tool": "read",
+          "payload": {
+            "record": "record-0"
+          },
+          "status": "ok",
+          "reason": null,
+          "call_id": "9a32fa66fe9549da8c7f01860b1ed8ab",
+          "approval_id": null,
+          "duration_ms": 0.24,
+          "thought": ""
+        },
+        {
+          "agent_id": "agent-006",
+          "tool": "read",
+          "payload": {
+            "record": "record-1"
+          },
+          "status": "ok",
+          "reason": null,
+          "call_id": "7e8ac99fb63f42c39c4d2217c969e8ce",
+          "approval_id": null,
+          "duration_ms": 0.33,
+          "thought": ""
+        },
+        {
+          "agent_id": "agent-007",
+          "tool": "read",
+          "payload": {
+            "record": "record-2"
+          },
+          "status": "ok",
+          "reason": null,
+          "call_id": "726a2ab5811d4e17962b2c6950fb087b",
+          "approval_id": null,
+          "duration_ms": 0.25,
+          "thought": ""
+        },
+        {
+          "agent_id": "agent-008",
+          "tool": "read",
+          "payload": {
+            "record": "record-0"
+          },
+          "status": "ok",
+          "reason": null,
+          "call_id": "437f8389f0bd44e9b022c59fd446718c",
+          "approval_id": null,
+          "duration_ms": 0.26,
+          "thought": ""
+        },
+        {
+          "agent_id": "agent-000",
+          "tool": "write",
+          "payload": {
+            "record": "hot",
+            "delta": 1
+          },
+          "status": "ok",
+          "reason": null,
+          "call_id": "137b5994569b4826a9e3f74f394adb78",
+          "approval_id": null,
+          "duration_ms": 17.54,
+          "thought": ""
+        },
+        {
+          "agent_id": "agent-001",
+          "tool": "write",
+          "payload": {
+            "record": "hot",
+            "delta": 1
+          },
+          "status": "ok",
+          "reason": null,
+          "call_id": "5d156c662336445fbdd9d35a8bc838c7",
+          "approval_id": null,
+          "duration_ms": 17.36,
+          "thought": ""
+        },
+        {
+          "agent_id": "agent-005",
+          "tool": "write",
+          "payload": {
+            "record": "hot",
+            "delta": 1
+          },
+          "status": "ok",
+          "reason": null,
+          "call_id": "2d79503e5d8e48088c517daf2b521305",
+          "approval_id": null,
+          "duration_ms": 30.42,
+          "thought": ""
+        },
+        {
+          "agent_id": "agent-009",
+          "tool": "write",
+          "payload": {
+            "record": "hot",
+            "delta": 1
+          },
+          "status": "ok",
+          "reason": null,
+          "call_id": "05fae9e97fa647758d03dca523d2c0ae",
+          "approval_id": null,
+          "duration_ms": 43.36,
+          "thought": ""
+        }
+      ],
+      "schema_errors": []
+    },
+    {
+      "goal_id": "trial-goal-5",
+      "mode": "scripted",
+      "llm_status": "LLM unavailable, fell back to scripted",
+      "fallback_reason": "LLM unavailable, fell back to scripted (HTTPStatusError)",
+      "duration_ms": 312.1,
+      "tokens": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0,
+        "cost_usd": 0.0,
+        "source": "none"
+      },
+      "calls_made": 10,
+      "calls_avoided": 3,
+      "denials": 0,
+      "successful_calls": 10,
+      "traces": [
+        {
+          "agent_id": "agent-001",
+          "tool": "read",
+          "payload": {
+            "record": "record-0"
+          },
+          "status": "ok",
+          "reason": null,
+          "call_id": "4d761692d7a249e1a90f0952fefb7991",
+          "approval_id": null,
+          "duration_ms": 0.32,
+          "thought": ""
+        },
+        {
+          "agent_id": "agent-003",
+          "tool": "read",
+          "payload": {
+            "record": "record-2"
+          },
+          "status": "ok",
+          "reason": null,
+          "call_id": "8548a24f81d74d21b405f98230a55b6a",
+          "approval_id": null,
+          "duration_ms": 9.49,
+          "thought": ""
+        },
+        {
+          "agent_id": "agent-004",
+          "tool": "read",
+          "payload": {
+            "record": "record-2"
+          },
+          "status": "ok",
+          "reason": null,
+          "call_id": "884e50f95c8e462fb7942f57dccfaa07",
+          "approval_id": null,
+          "duration_ms": 9.54,
+          "thought": ""
+        },
+        {
+          "agent_id": "agent-000",
+          "tool": "write",
+          "payload": {
+            "record": "hot",
+            "delta": 1
+          },
+          "status": "ok",
+          "reason": null,
+          "call_id": "d2fa98b2d4e040de91214f3789aed02c",
+          "approval_id": null,
+          "duration_ms": 25.68,
+          "thought": ""
+        },
+        {
+          "agent_id": "agent-002",
+          "tool": "write",
+          "payload": {
+            "record": "hot",
+            "delta": 1
+          },
+          "status": "ok",
+          "reason": null,
+          "call_id": "20ff05e4d2fe418c93715da23344f384",
+          "approval_id": null,
+          "duration_ms": 25.0,
+          "thought": ""
+        },
+        {
+          "agent_id": "agent-005",
+          "tool": "read",
+          "payload": {
+            "record": "record-1"
+          },
+          "status": "ok",
+          "reason": null,
+          "call_id": "93aede8ff22f44f3bc7df97069106ad5",
+          "approval_id": null,
+          "duration_ms": 24.43,
+          "thought": ""
+        },
+        {
+          "agent_id": "agent-007",
+          "tool": "read",
+          "payload": {
+            "record": "record-1"
+          },
+          "status": "ok",
+          "reason": null,
+          "call_id": "5f72ad964c3f4d12ae63ad38bcedec11",
+          "approval_id": null,
+          "duration_ms": 24.62,
+          "thought": ""
+        },
+        {
+          "agent_id": "agent-006",
+          "tool": "read",
+          "payload": {
+            "record": "record-3"
+          },
+          "status": "ok",
+          "reason": null,
+          "call_id": "a6b24b9ae24d4e4b90fdb4e917b91dde",
+          "approval_id": null,
+          "duration_ms": 39.92,
+          "thought": ""
+        },
+        {
+          "agent_id": "agent-009",
+          "tool": "read",
+          "payload": {
+            "record": "record-3"
+          },
+          "status": "ok",
+          "reason": null,
+          "call_id": "7b6a728d863c404cb9a2e262391abdd1",
+          "approval_id": null,
+          "duration_ms": 39.62,
+          "thought": ""
+        },
+        {
+          "agent_id": "agent-008",
+          "tool": "write",
+          "payload": {
+            "record": "hot",
+            "delta": 1
+          },
+          "status": "ok",
+          "reason": null,
+          "call_id": "e972218645f944f292043749fd955969",
+          "approval_id": null,
+          "duration_ms": 55.78,
+          "thought": ""
+        }
+      ],
+      "schema_errors": []
+    }
+  ]
+}
