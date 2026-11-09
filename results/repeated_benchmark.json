@@ -1,0 +1,1405 @@
+{
+  "trials_count_k": 5,
+  "seeds": [
+    7,
+    13,
+    42,
+    99,
+    101
+  ],
+  "calls_per_trial": 20,
+  "generated_at": "2026-11-08T13:16:20.589366+00:00",
+  "price_per_call_usd": 0.001,
+  "pass_k_analysis": {
+    "slo_criteria": "success_rate >= 0.95 AND upstream_errors == 0 AND lost_updates == 0",
+    "direct": {
+      "passed_trials": 0,
+      "total_trials": 5,
+      "pass_k_satisfied": false,
+      "pass_rate": 0.0
+    },
+    "gateway": {
+      "passed_trials": 5,
+      "total_trials": 5,
+      "pass_k_satisfied": true,
+      "pass_rate": 1.0
+    }
+  },
+  "distributions": {
+    "direct": {
+      "success_rate": {
+        "min": 0.2,
+        "median": 0.2,
+        "max": 0.2,
+        "mean": 0.2,
+        "std_dev": 0.0
+      },
+      "p50_ms": {
+        "min": 0.21,
+        "median": 0.54,
+        "max": 0.67,
+        "mean": 0.49,
+        "std_dev": 0.17
+      },
+      "p99_ms": {
+        "min": 24.99,
+        "median": 28.19,
+        "max": 29.88,
+        "mean": 27.98,
+        "std_dev": 1.9
+      },
+      "upstream_errors": {
+        "min": 16.0,
+        "median": 16.0,
+        "max": 16.0,
+        "mean": 16.0,
+        "std_dev": 0.0
+      },
+      "lost_updates": {
+        "min": 3.0,
+        "median": 3.0,
+        "max": 3.0,
+        "mean": 3.0,
+        "std_dev": 0.0
+      }
+    },
+    "gateway": {
+      "success_rate": {
+        "min": 1.0,
+        "median": 1.0,
+        "max": 1.0,
+        "mean": 1.0,
+        "std_dev": 0.0
+      },
+      "p50_ms": {
+        "min": 16.51,
+        "median": 25.97,
+        "max": 47.3,
+        "mean": 29.19,
+        "std_dev": 13.49
+      },
+      "p99_ms": {
+        "min": 28.69,
+        "median": 40.19,
+        "max": 52.21,
+        "mean": 39.14,
+        "std_dev": 9.08
+      },
+      "upstream_errors": {
+        "min": 0.0,
+        "median": 0.0,
+        "max": 0.0,
+        "mean": 0.0,
+        "std_dev": 0.0
+      },
+      "lost_updates": {
+        "min": 0.0,
+        "median": 0.0,
+        "max": 0.0,
+        "mean": 0.0,
+        "std_dev": 0.0
+      },
+      "calls_avoided": {
+        "min": 16.0,
+        "median": 16.0,
+        "max": 16.0,
+        "mean": 16.0,
+        "std_dev": 0.0
+      },
+      "deduplicated": {
+        "min": 16.0,
+        "median": 16.0,
+        "max": 16.0,
+        "mean": 16.0,
+        "std_dev": 0.0
+      }
+    }
+  },
+  "raw_trials": [
+    {
+      "seed": 7,
+      "direct": {
+        "traffic": {
+          "mode": "direct",
+          "client_calls": 20,
+          "successful": 4,
+          "success_rate": 0.2,
+          "latency_ms": {
+            "p50": 0.213,
+            "p99": 29.251
+          },
+          "backend_calls": 20,
+          "backend_accepted": 4,
+          "upstream_errors": 16,
+          "peak_upstream_concurrency": 4,
+          "fencing_rejections": 0,
+          "deduplicated": 0,
+          "calls_avoided": 0,
+          "budget_cancelled": 0,
+          "depth_denied": 0,
+          "policy_denied": 0,
+          "approval_pending": 0,
+          "loop_detected": 0,
+          "estimated_cost_usd": 0.02,
+          "backend_records": {
+            "hot": 0,
+            "secret": 0
+          },
+          "note": "Every duplicate request is sent to the backend."
+        },
+        "writes": {
+          "mode": "direct",
+          "client_calls": 12,
+          "successful": 4,
+          "success_rate": 0.3333,
+          "latency_ms": {
+            "p50": 0.618,
+            "p99": 44.392
+          },
+          "backend_calls": 12,
+          "backend_accepted": 4,
+          "upstream_errors": 8,
+          "peak_upstream_concurrency": 4,
+          "fencing_rejections": 0,
+          "deduplicated": 0,
+          "calls_avoided": 0,
+          "budget_cancelled": 0,
+          "depth_denied": 0,
+          "policy_denied": 0,
+          "approval_pending": 0,
+          "loop_detected": 0,
+          "estimated_cost_usd": 0.012,
+          "backend_records": {
+            "hot": 1,
+            "secret": 0
+          },
+          "final_value": 1,
+          "lost_updates": 3,
+          "note": "Naive read-modify-write: admitted writers overwrite each other."
+        },
+        "runaway": {
+          "mode": "direct",
+          "client_calls": 63,
+          "successful": 19,
+          "success_rate": 0.3016,
+          "latency_ms": {
+            "p50": 0.605,
+            "p99": 31.238
+          },
+          "backend_calls": 63,
+          "backend_accepted": 19,
+          "upstream_errors": 44,
+          "peak_upstream_concurrency": 4,
+          "fencing_rejections": 0,
+          "deduplicated": 0,
+          "calls_avoided": 0,
+          "budget_cancelled": 0,
+          "depth_denied": 0,
+          "policy_denied": 0,
+          "approval_pending": 0,
+          "loop_detected": 0,
+          "estimated_cost_usd": 0.063,
+          "backend_records": {
+            "hot": 0,
+            "secret": 0
+          },
+          "depth_reached": 5,
+          "depth_limit": null,
+          "stopped_reason": "client script hard stop (no gateway limit)",
+          "note": "Without the gateway the tree ran to the script's hard depth 5."
+        },
+        "fairness": {
+          "flood": {
+            "client_calls": 60,
+            "successful": 4,
+            "success_rate": 0.0667,
+            "latency_ms": {
+              "p50": 0.279,
+              "p99": 22.434
+            }
+          },
+          "light": {
+            "client_calls": 10,
+            "successful": 0,
+            "success_rate": 0.0,
+            "latency_ms": {
+              "p50": 0.174,
+              "p99": 0.361
+            }
+          },
+          "backend": {
+            "capacity": 4,
+            "calls": 70,
+            "accepted": 4,
+            "errors": 66,
+            "active_concurrency": 0,
+            "peak_concurrency": 4,
+            "p50_ms": 21.57,
+            "p99_ms": 21.817,
+            "fencing_rejections": 0,
+            "records": {
+              "hot": 0,
+              "secret": 0
+            }
+          },
+          "note": "All calls share one backend queue; the flood crowds out the light goal."
+        },
+        "passed": false
+      },
+      "gateway": {
+        "traffic": {
+          "mode": "gateway",
+          "client_calls": 20,
+          "successful": 20,
+          "success_rate": 1.0,
+          "latency_ms": {
+            "p50": 47.301,
+            "p99": 52.214
+          },
+          "backend_calls": 4,
+          "backend_accepted": 4,
+          "upstream_errors": 0,
+          "peak_upstream_concurrency": 2,
+          "fencing_rejections": 0,
+          "deduplicated": 16,
+          "calls_avoided": 16,
+          "budget_cancelled": 0,
+          "depth_denied": 0,
+          "policy_denied": 0,
+          "approval_pending": 0,
+          "loop_detected": 0,
+          "estimated_cost_usd": 0.004,
+          "backend_records": {
+            "hot": 0,
+            "secret": 0
+          },
+          "note": "Singleflight and the short read cache absorb duplicate reads."
+        },
+        "writes": {
+          "mode": "gateway",
+          "client_calls": 12,
+          "successful": 12,
+          "success_rate": 1.0,
+          "latency_ms": {
+            "p50": 278.659,
+            "p99": 512.575
+          },
+          "backend_calls": 13,
+          "backend_accepted": 13,
+          "upstream_errors": 0,
+          "peak_upstream_concurrency": 1,
+          "fencing_rejections": 0,
+          "deduplicated": 11,
+          "calls_avoided": 0,
+          "budget_cancelled": 0,
+          "depth_denied": 0,
+          "policy_denied": 0,
+          "approval_pending": 0,
+          "loop_detected": 0,
+          "estimated_cost_usd": 0.013,
+          "backend_records": {
+            "hot": 12,
+            "secret": 0
+          },
+          "goal_id": "writes-33cbf9a6",
+          "final_value": 12,
+          "lost_updates": 0,
+          "note": "Lease serializes writes; the backend rejects stale fencing tokens."
+        },
+        "runaway": {
+          "mode": "gateway",
+          "client_calls": 31,
+          "successful": 15,
+          "success_rate": 0.4839,
+          "latency_ms": {
+            "p50": 1.142,
+            "p99": 60.802
+          },
+          "backend_calls": 15,
+          "backend_accepted": 15,
+          "upstream_errors": 0,
+          "peak_upstream_concurrency": 3,
+          "fencing_rejections": 0,
+          "deduplicated": 0,
+          "calls_avoided": 0,
+          "budget_cancelled": 0,
+          "depth_denied": 16,
+          "policy_denied": 0,
+          "approval_pending": 0,
+          "loop_detected": 0,
+          "estimated_cost_usd": 0.015,
+          "backend_records": {
+            "hot": 0,
+            "secret": 0
+          },
+          "goal_id": "runaway-2acd252a",
+          "depth_reached": 4,
+          "depth_limit": 3,
+          "call_limit": 25,
+          "stopped_reason": "max_depth / max_calls",
+          "stop_reasons": {
+            "max_depth": 16
+          },
+          "note": "Denied calls return a machine-readable reason instead of spawning more agents."
+        },
+        "fairness": {
+          "flood": {
+            "client_calls": 60,
+            "successful": 60,
+            "success_rate": 1.0,
+            "latency_ms": {
+              "p50": 370.431,
+              "p99": 611.482
+            }
+          },
+          "light": {
+            "client_calls": 10,
+            "successful": 10,
+            "success_rate": 1.0,
+            "latency_ms": {
+              "p50": 96.753,
+              "p99": 142.924
+            }
+          },
+          "scheduler": {
+            "dispatched": {
+              "fair-flood-f7e94045": 60,
+              "fair-light-9d4e3314": 10
+            },
+            "waiting": 0
+          },
+          "note": "Deficit round-robin gives the weight-5 light goal its turns first."
+        },
+        "passed": true
+      }
+    },
+    {
+      "seed": 13,
+      "direct": {
+        "traffic": {
+          "mode": "direct",
+          "client_calls": 20,
+          "successful": 4,
+          "success_rate": 0.2,
+          "latency_ms": {
+            "p50": 0.669,
+            "p99": 28.194
+          },
+          "backend_calls": 20,
+          "backend_accepted": 4,
+          "upstream_errors": 16,
+          "peak_upstream_concurrency": 4,
+          "fencing_rejections": 0,
+          "deduplicated": 0,
+          "calls_avoided": 0,
+          "budget_cancelled": 0,
+          "depth_denied": 0,
+          "policy_denied": 0,
+          "approval_pending": 0,
+          "loop_detected": 0,
+          "estimated_cost_usd": 0.02,
+          "backend_records": {
+            "hot": 0,
+            "secret": 0
+          },
+          "note": "Every duplicate request is sent to the backend."
+        },
+        "writes": {
+          "mode": "direct",
+          "client_calls": 12,
+          "successful": 4,
+          "success_rate": 0.3333,
+          "latency_ms": {
+            "p50": 0.948,
+            "p99": 43.979
+          },
+          "backend_calls": 12,
+          "backend_accepted": 4,
+          "upstream_errors": 8,
+          "peak_upstream_concurrency": 4,
+          "fencing_rejections": 0,
+          "deduplicated": 0,
+          "calls_avoided": 0,
+          "budget_cancelled": 0,
+          "depth_denied": 0,
+          "policy_denied": 0,
+          "approval_pending": 0,
+          "loop_detected": 0,
+          "estimated_cost_usd": 0.012,
+          "backend_records": {
+            "hot": 1,
+            "secret": 0
+          },
+          "final_value": 1,
+          "lost_updates": 3,
+          "note": "Naive read-modify-write: admitted writers overwrite each other."
+        },
+        "runaway": {
+          "mode": "direct",
+          "client_calls": 63,
+          "successful": 16,
+          "success_rate": 0.254,
+          "latency_ms": {
+            "p50": 0.592,
+            "p99": 31.61
+          },
+          "backend_calls": 63,
+          "backend_accepted": 16,
+          "upstream_errors": 47,
+          "peak_upstream_concurrency": 4,
+          "fencing_rejections": 0,
+          "deduplicated": 0,
+          "calls_avoided": 0,
+          "budget_cancelled": 0,
+          "depth_denied": 0,
+          "policy_denied": 0,
+          "approval_pending": 0,
+          "loop_detected": 0,
+          "estimated_cost_usd": 0.063,
+          "backend_records": {
+            "hot": 0,
+            "secret": 0
+          },
+          "depth_reached": 5,
+          "depth_limit": null,
+          "stopped_reason": "client script hard stop (no gateway limit)",
+          "note": "Without the gateway the tree ran to the script's hard depth 5."
+        },
+        "fairness": {
+          "flood": {
+            "client_calls": 60,
+            "successful": 4,
+            "success_rate": 0.0667,
+            "latency_ms": {
+              "p50": 0.507,
+              "p99": 33.676
+            }
+          },
+          "light": {
+            "client_calls": 10,
+            "successful": 0,
+            "success_rate": 0.0,
+            "latency_ms": {
+              "p50": 0.21,
+              "p99": 0.274
+            }
+          },
+          "backend": {
+            "capacity": 4,
+            "calls": 70,
+            "accepted": 4,
+            "errors": 66,
+            "active_concurrency": 0,
+            "peak_concurrency": 4,
+            "p50_ms": 32.437,
+            "p99_ms": 32.683,
+            "fencing_rejections": 0,
+            "records": {
+              "hot": 0,
+              "secret": 0
+            }
+          },
+          "note": "All calls share one backend queue; the flood crowds out the light goal."
+        },
+        "passed": false
+      },
+      "gateway": {
+        "traffic": {
+          "mode": "gateway",
+          "client_calls": 20,
+          "successful": 20,
+          "success_rate": 1.0,
+          "latency_ms": {
+            "p50": 17.424,
+            "p99": 28.692
+          },
+          "backend_calls": 4,
+          "backend_accepted": 4,
+          "upstream_errors": 0,
+          "peak_upstream_concurrency": 3,
+          "fencing_rejections": 0,
+          "deduplicated": 16,
+          "calls_avoided": 16,
+          "budget_cancelled": 0,
+          "depth_denied": 0,
+          "policy_denied": 0,
+          "approval_pending": 0,
+          "loop_detected": 0,
+          "estimated_cost_usd": 0.004,
+          "backend_records": {
+            "hot": 0,
+            "secret": 0
+          },
+          "note": "Singleflight and the short read cache absorb duplicate reads."
+        },
+        "writes": {
+          "mode": "gateway",
+          "client_calls": 12,
+          "successful": 12,
+          "success_rate": 1.0,
+          "latency_ms": {
+            "p50": 277.125,
+            "p99": 509.008
+          },
+          "backend_calls": 13,
+          "backend_accepted": 13,
+          "upstream_errors": 0,
+          "peak_upstream_concurrency": 1,
+          "fencing_rejections": 0,
+          "deduplicated": 11,
+          "calls_avoided": 0,
+          "budget_cancelled": 0,
+          "depth_denied": 0,
+          "policy_denied": 0,
+          "approval_pending": 0,
+          "loop_detected": 0,
+          "estimated_cost_usd": 0.013,
+          "backend_records": {
+            "hot": 12,
+            "secret": 0
+          },
+          "goal_id": "writes-1a189230",
+          "final_value": 12,
+          "lost_updates": 0,
+          "note": "Lease serializes writes; the backend rejects stale fencing tokens."
+        },
+        "runaway": {
+          "mode": "gateway",
+          "client_calls": 31,
+          "successful": 15,
+          "success_rate": 0.4839,
+          "latency_ms": {
+            "p50": 0.867,
+            "p99": 77.759
+          },
+          "backend_calls": 15,
+          "backend_accepted": 15,
+          "upstream_errors": 0,
+          "peak_upstream_concurrency": 3,
+          "fencing_rejections": 0,
+          "deduplicated": 0,
+          "calls_avoided": 0,
+          "budget_cancelled": 0,
+          "depth_denied": 16,
+          "policy_denied": 0,
+          "approval_pending": 0,
+          "loop_detected": 0,
+          "estimated_cost_usd": 0.015,
+          "backend_records": {
+            "hot": 0,
+            "secret": 0
+          },
+          "goal_id": "runaway-dec2aea1",
+          "depth_reached": 4,
+          "depth_limit": 3,
+          "call_limit": 25,
+          "stopped_reason": "max_depth / max_calls",
+          "stop_reasons": {
+            "max_depth": 16
+          },
+          "note": "Denied calls return a machine-readable reason instead of spawning more agents."
+        },
+        "fairness": {
+          "flood": {
+            "client_calls": 60,
+            "successful": 60,
+            "success_rate": 1.0,
+            "latency_ms": {
+              "p50": 396.162,
+              "p99": 647.556
+            }
+          },
+          "light": {
+            "client_calls": 10,
+            "successful": 10,
+            "success_rate": 1.0,
+            "latency_ms": {
+              "p50": 112.932,
+              "p99": 143.779
+            }
+          },
+          "scheduler": {
+            "dispatched": {
+              "fair-flood-bcb3f136": 60,
+              "fair-light-b7d6a757": 10
+            },
+            "waiting": 0
+          },
+          "note": "Deficit round-robin gives the weight-5 light goal its turns first."
+        },
+        "passed": true
+      }
+    },
+    {
+      "seed": 42,
+      "direct": {
+        "traffic": {
+          "mode": "direct",
+          "client_calls": 20,
+          "successful": 4,
+          "success_rate": 0.2,
+          "latency_ms": {
+            "p50": 0.472,
+            "p99": 29.884
+          },
+          "backend_calls": 20,
+          "backend_accepted": 4,
+          "upstream_errors": 16,
+          "peak_upstream_concurrency": 4,
+          "fencing_rejections": 0,
+          "deduplicated": 0,
+          "calls_avoided": 0,
+          "budget_cancelled": 0,
+          "depth_denied": 0,
+          "policy_denied": 0,
+          "approval_pending": 0,
+          "loop_detected": 0,
+          "estimated_cost_usd": 0.02,
+          "backend_records": {
+            "hot": 0,
+            "secret": 0
+          },
+          "note": "Every duplicate request is sent to the backend."
+        },
+        "writes": {
+          "mode": "direct",
+          "client_calls": 12,
+          "successful": 4,
+          "success_rate": 0.3333,
+          "latency_ms": {
+            "p50": 1.006,
+            "p99": 44.158
+          },
+          "backend_calls": 12,
+          "backend_accepted": 4,
+          "upstream_errors": 8,
+          "peak_upstream_concurrency": 4,
+          "fencing_rejections": 0,
+          "deduplicated": 0,
+          "calls_avoided": 0,
+          "budget_cancelled": 0,
+          "depth_denied": 0,
+          "policy_denied": 0,
+          "approval_pending": 0,
+          "loop_detected": 0,
+          "estimated_cost_usd": 0.012,
+          "backend_records": {
+            "hot": 1,
+            "secret": 0
+          },
+          "final_value": 1,
+          "lost_updates": 3,
+          "note": "Naive read-modify-write: admitted writers overwrite each other."
+        },
+        "runaway": {
+          "mode": "direct",
+          "client_calls": 63,
+          "successful": 17,
+          "success_rate": 0.2698,
+          "latency_ms": {
+            "p50": 0.632,
+            "p99": 32.193
+          },
+          "backend_calls": 63,
+          "backend_accepted": 17,
+          "upstream_errors": 46,
+          "peak_upstream_concurrency": 4,
+          "fencing_rejections": 0,
+          "deduplicated": 0,
+          "calls_avoided": 0,
+          "budget_cancelled": 0,
+          "depth_denied": 0,
+          "policy_denied": 0,
+          "approval_pending": 0,
+          "loop_detected": 0,
+          "estimated_cost_usd": 0.063,
+          "backend_records": {
+            "hot": 0,
+            "secret": 0
+          },
+          "depth_reached": 5,
+          "depth_limit": null,
+          "stopped_reason": "client script hard stop (no gateway limit)",
+          "note": "Without the gateway the tree ran to the script's hard depth 5."
+        },
+        "fairness": {
+          "flood": {
+            "client_calls": 60,
+            "successful": 4,
+            "success_rate": 0.0667,
+            "latency_ms": {
+              "p50": 0.577,
+              "p99": 43.6
+            }
+          },
+          "light": {
+            "client_calls": 10,
+            "successful": 0,
+            "success_rate": 0.0,
+            "latency_ms": {
+              "p50": 0.488,
+              "p99": 0.809
+            }
+          },
+          "backend": {
+            "capacity": 4,
+            "calls": 70,
+            "accepted": 4,
+            "errors": 66,
+            "active_concurrency": 0,
+            "peak_concurrency": 4,
+            "p50_ms": 42.595,
+            "p99_ms": 42.726,
+            "fencing_rejections": 0,
+            "records": {
+              "hot": 0,
+              "secret": 0
+            }
+          },
+          "note": "All calls share one backend queue; the flood crowds out the light goal."
+        },
+        "passed": false
+      },
+      "gateway": {
+        "traffic": {
+          "mode": "gateway",
+          "client_calls": 20,
+          "successful": 20,
+          "success_rate": 1.0,
+          "latency_ms": {
+            "p50": 38.726,
+            "p99": 41.864
+          },
+          "backend_calls": 4,
+          "backend_accepted": 4,
+          "upstream_errors": 0,
+          "peak_upstream_concurrency": 2,
+          "fencing_rejections": 0,
+          "deduplicated": 16,
+          "calls_avoided": 16,
+          "budget_cancelled": 0,
+          "depth_denied": 0,
+          "policy_denied": 0,
+          "approval_pending": 0,
+          "loop_detected": 0,
+          "estimated_cost_usd": 0.004,
+          "backend_records": {
+            "hot": 0,
+            "secret": 0
+          },
+          "note": "Singleflight and the short read cache absorb duplicate reads."
+        },
+        "writes": {
+          "mode": "gateway",
+          "client_calls": 12,
+          "successful": 12,
+          "success_rate": 1.0,
+          "latency_ms": {
+            "p50": 247.145,
+            "p99": 488.249
+          },
+          "backend_calls": 13,
+          "backend_accepted": 13,
+          "upstream_errors": 0,
+          "peak_upstream_concurrency": 1,
+          "fencing_rejections": 0,
+          "deduplicated": 11,
+          "calls_avoided": 0,
+          "budget_cancelled": 0,
+          "depth_denied": 0,
+          "policy_denied": 0,
+          "approval_pending": 0,
+          "loop_detected": 0,
+          "estimated_cost_usd": 0.013,
+          "backend_records": {
+            "hot": 12,
+            "secret": 0
+          },
+          "goal_id": "writes-82e7534d",
+          "final_value": 12,
+          "lost_updates": 0,
+          "note": "Lease serializes writes; the backend rejects stale fencing tokens."
+        },
+        "runaway": {
+          "mode": "gateway",
+          "client_calls": 31,
+          "successful": 15,
+          "success_rate": 0.4839,
+          "latency_ms": {
+            "p50": 1.627,
+            "p99": 86.766
+          },
+          "backend_calls": 15,
+          "backend_accepted": 15,
+          "upstream_errors": 0,
+          "peak_upstream_concurrency": 3,
+          "fencing_rejections": 0,
+          "deduplicated": 0,
+          "calls_avoided": 0,
+          "budget_cancelled": 0,
+          "depth_denied": 16,
+          "policy_denied": 0,
+          "approval_pending": 0,
+          "loop_detected": 0,
+          "estimated_cost_usd": 0.015,
+          "backend_records": {
+            "hot": 0,
+            "secret": 0
+          },
+          "goal_id": "runaway-ba7ac0dc",
+          "depth_reached": 4,
+          "depth_limit": 3,
+          "call_limit": 25,
+          "stopped_reason": "max_depth / max_calls",
+          "stop_reasons": {
+            "max_depth": 16
+          },
+          "note": "Denied calls return a machine-readable reason instead of spawning more agents."
+        },
+        "fairness": {
+          "flood": {
+            "client_calls": 60,
+            "successful": 60,
+            "success_rate": 1.0,
+            "latency_ms": {
+              "p50": 418.16,
+              "p99": 693.317
+            }
+          },
+          "light": {
+            "client_calls": 10,
+            "successful": 10,
+            "success_rate": 1.0,
+            "latency_ms": {
+              "p50": 116.303,
+              "p99": 175.8
+            }
+          },
+          "scheduler": {
+            "dispatched": {
+              "fair-flood-ec07e044": 60,
+              "fair-light-54791310": 10
+            },
+            "waiting": 0
+          },
+          "note": "Deficit round-robin gives the weight-5 light goal its turns first."
+        },
+        "passed": true
+      }
+    },
+    {
+      "seed": 99,
+      "direct": {
+        "traffic": {
+          "mode": "direct",
+          "client_calls": 20,
+          "successful": 4,
+          "success_rate": 0.2,
+          "latency_ms": {
+            "p50": 0.538,
+            "p99": 27.578
+          },
+          "backend_calls": 20,
+          "backend_accepted": 4,
+          "upstream_errors": 16,
+          "peak_upstream_concurrency": 4,
+          "fencing_rejections": 0,
+          "deduplicated": 0,
+          "calls_avoided": 0,
+          "budget_cancelled": 0,
+          "depth_denied": 0,
+          "policy_denied": 0,
+          "approval_pending": 0,
+          "loop_detected": 0,
+          "estimated_cost_usd": 0.02,
+          "backend_records": {
+            "hot": 0,
+            "secret": 0
+          },
+          "note": "Every duplicate request is sent to the backend."
+        },
+        "writes": {
+          "mode": "direct",
+          "client_calls": 12,
+          "successful": 4,
+          "success_rate": 0.3333,
+          "latency_ms": {
+            "p50": 0.62,
+            "p99": 43.084
+          },
+          "backend_calls": 12,
+          "backend_accepted": 4,
+          "upstream_errors": 8,
+          "peak_upstream_concurrency": 4,
+          "fencing_rejections": 0,
+          "deduplicated": 0,
+          "calls_avoided": 0,
+          "budget_cancelled": 0,
+          "depth_denied": 0,
+          "policy_denied": 0,
+          "approval_pending": 0,
+          "loop_detected": 0,
+          "estimated_cost_usd": 0.012,
+          "backend_records": {
+            "hot": 1,
+            "secret": 0
+          },
+          "final_value": 1,
+          "lost_updates": 3,
+          "note": "Naive read-modify-write: admitted writers overwrite each other."
+        },
+        "runaway": {
+          "mode": "direct",
+          "client_calls": 63,
+          "successful": 17,
+          "success_rate": 0.2698,
+          "latency_ms": {
+            "p50": 0.594,
+            "p99": 33.02
+          },
+          "backend_calls": 63,
+          "backend_accepted": 17,
+          "upstream_errors": 46,
+          "peak_upstream_concurrency": 4,
+          "fencing_rejections": 0,
+          "deduplicated": 0,
+          "calls_avoided": 0,
+          "budget_cancelled": 0,
+          "depth_denied": 0,
+          "policy_denied": 0,
+          "approval_pending": 0,
+          "loop_detected": 0,
+          "estimated_cost_usd": 0.063,
+          "backend_records": {
+            "hot": 0,
+            "secret": 0
+          },
+          "depth_reached": 5,
+          "depth_limit": null,
+          "stopped_reason": "client script hard stop (no gateway limit)",
+          "note": "Without the gateway the tree ran to the script's hard depth 5."
+        },
+        "fairness": {
+          "flood": {
+            "client_calls": 60,
+            "successful": 4,
+            "success_rate": 0.0667,
+            "latency_ms": {
+              "p50": 0.503,
+              "p99": 43.082
+            }
+          },
+          "light": {
+            "client_calls": 10,
+            "successful": 0,
+            "success_rate": 0.0,
+            "latency_ms": {
+              "p50": 0.546,
+              "p99": 2.803
+            }
+          },
+          "backend": {
+            "capacity": 4,
+            "calls": 70,
+            "accepted": 4,
+            "errors": 66,
+            "active_concurrency": 0,
+            "peak_concurrency": 4,
+            "p50_ms": 42.097,
+            "p99_ms": 42.28,
+            "fencing_rejections": 0,
+            "records": {
+              "hot": 0,
+              "secret": 0
+            }
+          },
+          "note": "All calls share one backend queue; the flood crowds out the light goal."
+        },
+        "passed": false
+      },
+      "gateway": {
+        "traffic": {
+          "mode": "gateway",
+          "client_calls": 20,
+          "successful": 20,
+          "success_rate": 1.0,
+          "latency_ms": {
+            "p50": 16.513,
+            "p99": 32.732
+          },
+          "backend_calls": 4,
+          "backend_accepted": 4,
+          "upstream_errors": 0,
+          "peak_upstream_concurrency": 3,
+          "fencing_rejections": 0,
+          "deduplicated": 16,
+          "calls_avoided": 16,
+          "budget_cancelled": 0,
+          "depth_denied": 0,
+          "policy_denied": 0,
+          "approval_pending": 0,
+          "loop_detected": 0,
+          "estimated_cost_usd": 0.004,
+          "backend_records": {
+            "hot": 0,
+            "secret": 0
+          },
+          "note": "Singleflight and the short read cache absorb duplicate reads."
+        },
+        "writes": {
+          "mode": "gateway",
+          "client_calls": 12,
+          "successful": 12,
+          "success_rate": 1.0,
+          "latency_ms": {
+            "p50": 262.678,
+            "p99": 494.929
+          },
+          "backend_calls": 13,
+          "backend_accepted": 13,
+          "upstream_errors": 0,
+          "peak_upstream_concurrency": 1,
+          "fencing_rejections": 0,
+          "deduplicated": 11,
+          "calls_avoided": 0,
+          "budget_cancelled": 0,
+          "depth_denied": 0,
+          "policy_denied": 0,
+          "approval_pending": 0,
+          "loop_detected": 0,
+          "estimated_cost_usd": 0.013,
+          "backend_records": {
+            "hot": 12,
+            "secret": 0
+          },
+          "goal_id": "writes-2514794e",
+          "final_value": 12,
+          "lost_updates": 0,
+          "note": "Lease serializes writes; the backend rejects stale fencing tokens."
+        },
+        "runaway": {
+          "mode": "gateway",
+          "client_calls": 31,
+          "successful": 15,
+          "success_rate": 0.4839,
+          "latency_ms": {
+            "p50": 2.089,
+            "p99": 86.503
+          },
+          "backend_calls": 15,
+          "backend_accepted": 15,
+          "upstream_errors": 0,
+          "peak_upstream_concurrency": 3,
+          "fencing_rejections": 0,
+          "deduplicated": 0,
+          "calls_avoided": 0,
+          "budget_cancelled": 0,
+          "depth_denied": 16,
+          "policy_denied": 0,
+          "approval_pending": 0,
+          "loop_detected": 0,
+          "estimated_cost_usd": 0.015,
+          "backend_records": {
+            "hot": 0,
+            "secret": 0
+          },
+          "goal_id": "runaway-f578f4e0",
+          "depth_reached": 4,
+          "depth_limit": 3,
+          "call_limit": 25,
+          "stopped_reason": "max_depth / max_calls",
+          "stop_reasons": {
+            "max_depth": 16
+          },
+          "note": "Denied calls return a machine-readable reason instead of spawning more agents."
+        },
+        "fairness": {
+          "flood": {
+            "client_calls": 60,
+            "successful": 60,
+            "success_rate": 1.0,
+            "latency_ms": {
+              "p50": 373.095,
+              "p99": 655.101
+            }
+          },
+          "light": {
+            "client_calls": 10,
+            "successful": 10,
+            "success_rate": 1.0,
+            "latency_ms": {
+              "p50": 100.516,
+              "p99": 144.767
+            }
+          },
+          "scheduler": {
+            "dispatched": {
+              "fair-flood-41e83c41": 60,
+              "fair-light-1408fb46": 10
+            },
+            "waiting": 0
+          },
+          "note": "Deficit round-robin gives the weight-5 light goal its turns first."
+        },
+        "passed": true
+      }
+    },
+    {
+      "seed": 101,
+      "direct": {
+        "traffic": {
+          "mode": "direct",
+          "client_calls": 20,
+          "successful": 4,
+          "success_rate": 0.2,
+          "latency_ms": {
+            "p50": 0.553,
+            "p99": 24.987
+          },
+          "backend_calls": 20,
+          "backend_accepted": 4,
+          "upstream_errors": 16,
+          "peak_upstream_concurrency": 4,
+          "fencing_rejections": 0,
+          "deduplicated": 0,
+          "calls_avoided": 0,
+          "budget_cancelled": 0,
+          "depth_denied": 0,
+          "policy_denied": 0,
+          "approval_pending": 0,
+          "loop_detected": 0,
+          "estimated_cost_usd": 0.02,
+          "backend_records": {
+            "hot": 0,
+            "secret": 0
+          },
+          "note": "Every duplicate request is sent to the backend."
+        },
+        "writes": {
+          "mode": "direct",
+          "client_calls": 12,
+          "successful": 4,
+          "success_rate": 0.3333,
+          "latency_ms": {
+            "p50": 1.379,
+            "p99": 44.892
+          },
+          "backend_calls": 12,
+          "backend_accepted": 4,
+          "upstream_errors": 8,
+          "peak_upstream_concurrency": 4,
+          "fencing_rejections": 0,
+          "deduplicated": 0,
+          "calls_avoided": 0,
+          "budget_cancelled": 0,
+          "depth_denied": 0,
+          "policy_denied": 0,
+          "approval_pending": 0,
+          "loop_detected": 0,
+          "estimated_cost_usd": 0.012,
+          "backend_records": {
+            "hot": 1,
+            "secret": 0
+          },
+          "final_value": 1,
+          "lost_updates": 3,
+          "note": "Naive read-modify-write: admitted writers overwrite each other."
+        },
+        "runaway": {
+          "mode": "direct",
+          "client_calls": 63,
+          "successful": 17,
+          "success_rate": 0.2698,
+          "latency_ms": {
+            "p50": 0.555,
+            "p99": 34.786
+          },
+          "backend_calls": 63,
+          "backend_accepted": 17,
+          "upstream_errors": 46,
+          "peak_upstream_concurrency": 4,
+          "fencing_rejections": 0,
+          "deduplicated": 0,
+          "calls_avoided": 0,
+          "budget_cancelled": 0,
+          "depth_denied": 0,
+          "policy_denied": 0,
+          "approval_pending": 0,
+          "loop_detected": 0,
+          "estimated_cost_usd": 0.063,
+          "backend_records": {
+            "hot": 0,
+            "secret": 0
+          },
+          "depth_reached": 5,
+          "depth_limit": null,
+          "stopped_reason": "client script hard stop (no gateway limit)",
+          "note": "Without the gateway the tree ran to the script's hard depth 5."
+        },
+        "fairness": {
+          "flood": {
+            "client_calls": 60,
+            "successful": 4,
+            "success_rate": 0.0667,
+            "latency_ms": {
+              "p50": 0.541,
+              "p99": 39.769
+            }
+          },
+          "light": {
+            "client_calls": 10,
+            "successful": 0,
+            "success_rate": 0.0,
+            "latency_ms": {
+              "p50": 0.549,
+              "p99": 0.856
+            }
+          },
+          "backend": {
+            "capacity": 4,
+            "calls": 70,
+            "accepted": 4,
+            "errors": 66,
+            "active_concurrency": 0,
+            "peak_concurrency": 4,
+            "p50_ms": 38.843,
+            "p99_ms": 38.953,
+            "fencing_rejections": 0,
+            "records": {
+              "hot": 0,
+              "secret": 0
+            }
+          },
+          "note": "All calls share one backend queue; the flood crowds out the light goal."
+        },
+        "passed": false
+      },
+      "gateway": {
+        "traffic": {
+          "mode": "gateway",
+          "client_calls": 20,
+          "successful": 20,
+          "success_rate": 1.0,
+          "latency_ms": {
+            "p50": 25.972,
+            "p99": 40.191
+          },
+          "backend_calls": 4,
+          "backend_accepted": 4,
+          "upstream_errors": 0,
+          "peak_upstream_concurrency": 2,
+          "fencing_rejections": 0,
+          "deduplicated": 16,
+          "calls_avoided": 16,
+          "budget_cancelled": 0,
+          "depth_denied": 0,
+          "policy_denied": 0,
+          "approval_pending": 0,
+          "loop_detected": 0,
+          "estimated_cost_usd": 0.004,
+          "backend_records": {
+            "hot": 0,
+            "secret": 0
+          },
+          "note": "Singleflight and the short read cache absorb duplicate reads."
+        },
+        "writes": {
+          "mode": "gateway",
+          "client_calls": 12,
+          "successful": 12,
+          "success_rate": 1.0,
+          "latency_ms": {
+            "p50": 272.177,
+            "p99": 490.668
+          },
+          "backend_calls": 13,
+          "backend_accepted": 13,
+          "upstream_errors": 0,
+          "peak_upstream_concurrency": 1,
+          "fencing_rejections": 0,
+          "deduplicated": 11,
+          "calls_avoided": 0,
+          "budget_cancelled": 0,
+          "depth_denied": 0,
+          "policy_denied": 0,
+          "approval_pending": 0,
+          "loop_detected": 0,
+          "estimated_cost_usd": 0.013,
+          "backend_records": {
+            "hot": 12,
+            "secret": 0
+          },
+          "goal_id": "writes-5409b423",
+          "final_value": 12,
+          "lost_updates": 0,
+          "note": "Lease serializes writes; the backend rejects stale fencing tokens."
+        },
+        "runaway": {
+          "mode": "gateway",
+          "client_calls": 31,
+          "successful": 15,
+          "success_rate": 0.4839,
+          "latency_ms": {
+            "p50": 1.727,
+            "p99": 91.151
+          },
+          "backend_calls": 15,
+          "backend_accepted": 15,
+          "upstream_errors": 0,
+          "peak_upstream_concurrency": 3,
+          "fencing_rejections": 0,
+          "deduplicated": 0,
+          "calls_avoided": 0,
+          "budget_cancelled": 0,
+          "depth_denied": 16,
+          "policy_denied": 0,
+          "approval_pending": 0,
+          "loop_detected": 0,
+          "estimated_cost_usd": 0.015,
+          "backend_records": {
+            "hot": 0,
+            "secret": 0
+          },
+          "goal_id": "runaway-eb824d2f",
+          "depth_reached": 4,
+          "depth_limit": 3,
+          "call_limit": 25,
+          "stopped_reason": "max_depth / max_calls",
+          "stop_reasons": {
+            "max_depth": 16
+          },
+          "note": "Denied calls return a machine-readable reason instead of spawning more agents."
+        },
+        "fairness": {
+          "flood": {
+            "client_calls": 60,
+            "successful": 60,
+            "success_rate": 1.0,
+            "latency_ms": {
+              "p50": 406.827,
+              "p99": 642.033
+            }
+          },
+          "light": {
+            "client_calls": 10,
+            "successful": 10,
+            "success_rate": 1.0,
+            "latency_ms": {
+              "p50": 93.458,
+              "p99": 155.036
+            }
+          },
+          "scheduler": {
+            "dispatched": {
+              "fair-flood-b08786d1": 60,
+              "fair-light-fe3ad601": 10
+            },
+            "waiting": 0
+          },
+          "note": "Deficit round-robin gives the weight-5 light goal its turns first."
+        },
+        "passed": true
+      }
+    }
+  ]
+}
