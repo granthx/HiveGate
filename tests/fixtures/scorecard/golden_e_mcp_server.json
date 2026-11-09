@@ -1,0 +1,158 @@
+{
+  "overall_score": 57,
+  "grade": "C \u00b7 EXPOSED / LACKING CONTROLS",
+  "confidence": 82.1,
+  "site_posture": {
+    "score": 57,
+    "grade": "C \u00b7 ELEVATED RISK",
+    "confidence": 82.1
+  },
+  "gateway_effect": {
+    "measured": false,
+    "score": null,
+    "grade": "NOT MEASURED",
+    "confidence": 0.0,
+    "delta_summary": "Reconnaissance only \u2014 Gateway not in path (no load/probe test executed)"
+  },
+  "tech_stack": [
+    "Model Context Protocol (MCP) Manifest"
+  ],
+  "latency_profile": {
+    "cold_total_ms": 5.2,
+    "ttfb_ms": 4.7,
+    "download_ms": 0.5,
+    "warm_p50_ms": 2.8,
+    "burst_3x_p95_ms": 8.4,
+    "degradation_ratio": 3.0,
+    "latency_cause": "Concurrent Burst Queueing Contention (3.0\u00d7 p95 spike)"
+  },
+  "agents_count": 0,
+  "tools_count": 2,
+  "has_active_agents": false,
+  "benchmarks": [
+    {
+      "row_id": "latency_burst_tail",
+      "pillar": "Pillar 1 \u00b7 App, Latency & Telemetry",
+      "dimension": "Server TTFB & 3\u00d7 Burst Tail Latency (p95)",
+      "standard_ref": "04_TELEMETRY \u00a73.1 & \u00a77.1 (Web Latency SLO & Concurrent Burst Queueing Contention)",
+      "threshold_source": "04_TELEMETRY \u00a73.1 & \u00a77.1 (Web Latency SLO & Concurrent Burst Queueing Contention)",
+      "rule_description": "Pass if TTFB <= 250.0ms and degradation_ratio <= 1.8; Warn if TTFB > 250ms or degradation_ratio > 1.8; Unknown if latency unmeasured; Protected if Gateway admission control eliminates upstream 429s (errors == 0).",
+      "thresholds": {
+        "max_ttfb_ms": 250.0,
+        "max_degradation_ratio": 1.8,
+        "gateway_errors": 0
+      },
+      "measured_current": "MEASURED: Cold 5.2ms \u00b7 TTFB 4.7ms \u00b7 Warm p50 2.8ms \u00b7 3\u00d7 Burst p95 8.4ms (3.0\u00d7 ratio \u2014 Concurrent Burst Queueing Contention (3.0\u00d7 p95 spike))",
+      "what_it_was_lacking": "Burst p95 degrades 3.0\u00d7 (8.4ms) under concurrent load without admission queueing",
+      "what_it_has_to_be": "TTFB \u2264 250ms \u00b7 Burst p95 \u2264 1.8\u00d7 Warm p50 \u00b7 0 HTTP 429s via Adaptive Admission + Singleflight",
+      "status": "PASS",
+      "evidence_kind": "MEASURED",
+      "gateway_module": "admission.py + dedup.py"
+    },
+    {
+      "row_id": "opentelemetry_correlation",
+      "pillar": "Pillar 1 \u00b7 App, Latency & Telemetry",
+      "dimension": "OpenTelemetry GenAI Trace & Request Correlation",
+      "standard_ref": "04_TELEMETRY \u00a72.1 & \u00a74.5 (W3C TraceContext Recommendation & gen_ai.* span correlation)",
+      "threshold_source": "04_TELEMETRY \u00a72.1 & \u00a74.5 (W3C TraceContext Recommendation & gen_ai.* span correlation)",
+      "rule_description": "Pass if W3C traceparent or X-Request-ID detected in headers; Lacking if headers missing; Protected if 100% of Gateway requests carry call_id + parent_call_id + goal_id span tree.",
+      "thresholds": {
+        "min_traced_calls_pct": 100.0
+      },
+      "measured_current": "DETECTED: traceparent=False \u00b7 x-request-id=False",
+      "what_it_was_lacking": "Missing W3C traceparent / gen_ai.* span attributes & parent\u2192child sub-agent call lineage",
+      "what_it_has_to_be": "100% requests carry request_id/trace_id + parent_call_id span tree + token/cost attribution",
+      "status": "LACKING",
+      "evidence_kind": "DETECTED",
+      "gateway_module": "metrics.py + pipeline.py"
+    },
+    {
+      "row_id": "idempotency_concurrency",
+      "pillar": "Pillar 1 \u00b7 App, Latency & Telemetry",
+      "dimension": "Idempotency & Optimistic Concurrency (CAS / ETag)",
+      "standard_ref": "02_MASTER_DEPLOYMENT_GUIDE \u00a73.2 & \u00a75.7 (RFC 7232 ETag / If-Match & Martin Kleppmann Fencing Tokens)",
+      "threshold_source": "02_MASTER_DEPLOYMENT_GUIDE \u00a73.2 & \u00a75.7 (RFC 7232 ETag / If-Match & Martin Kleppmann Fencing Tokens)",
+      "rule_description": "Pass if ETag or Idempotency-Key present on mutative endpoints; Lacking if unversioned; Protected if CAS versioning & fencing tokens reduce lost writes to exactly 0.",
+      "thresholds": {
+        "max_lost_updates_allowed": 0
+      },
+      "measured_current": "DETECTED: ETag=False \u00b7 Idempotency-Key=False",
+      "what_it_was_lacking": "2 callable tool surface(s) lack If-Match CAS versioning and monotonic fencing tokens",
+      "what_it_has_to_be": "Monotonic fencing_token leases + If-Match: <version> CAS check returning 409 on stale writes (0 lost updates)",
+      "status": "LACKING",
+      "evidence_kind": "DETECTED",
+      "gateway_module": "locks.py + state.py"
+    },
+    {
+      "row_id": "lethal_trifecta_defense",
+      "pillar": "Pillar 2 \u00b7 AI & API Security (OWASP 2026)",
+      "dimension": "The Lethal Trifecta Defense (Input \u00d7 Tools \u00d7 Exfil)",
+      "standard_ref": "03_AI_SECURITY_PLAYBOOK \u00a70 & OWASP Top 10 for Agentic Applications 2026 (ASI01 / ASI02)",
+      "threshold_source": "03_AI_SECURITY_PLAYBOOK \u00a70 & OWASP Top 10 for Agentic Applications 2026 (ASI01 / ASI02)",
+      "rule_description": "Pass if CSP present or 0 declared agents with unmediated mutative tools; Lacking if agents have unmediated access to tools; Protected if YAML policy blocks unauthorized execution and pauses high-value refunds for approval.",
+      "thresholds": {
+        "unauthorized_executions": 0,
+        "approval_gate_enforced": true
+      },
+      "measured_current": "DETECTED: 0 agent(s) \u00d7 2 tool(s) \u00b7 CSP=False",
+      "what_it_was_lacking": "No external policy enforcement layer between AI/client callers and backend tool endpoints",
+      "what_it_has_to_be": "Enforce authorization outside the LLM: YAML tool allow-lists + read_only_agent rules + Human Approval Gate",
+      "status": "LACKING",
+      "evidence_kind": "DETECTED",
+      "gateway_module": "policy.py (YAML + Approval Gate)"
+    },
+    {
+      "row_id": "unbounded_consumption_cascades",
+      "pillar": "Pillar 2 \u00b7 AI & API Security (OWASP 2026)",
+      "dimension": "OWASP LLM06 Unbounded Consumption & ASI08 Cascading Failures",
+      "standard_ref": "03_AI_SECURITY_PLAYBOOK \u00a72 LLM06 & \u00a73 ASI08 (OWASP LLM06 Denial of Wallet & ASI08 Cascading Failures)",
+      "threshold_source": "03_AI_SECURITY_PLAYBOOK \u00a72 LLM06 & \u00a73 ASI08 (OWASP LLM06 Denial of Wallet & ASI08 Cascading Failures)",
+      "rule_description": "Pass if RateLimit or Retry-After headers present; Lacking if headers absent; Protected if recursive fan-out capped at depth <= 3 and in-flight duplicates coalesced.",
+      "thresholds": {
+        "max_depth": 3,
+        "upstream_429s": 0
+      },
+      "measured_current": "DETECTED: RateLimit headers=False \u00b7 Retry-After=False",
+      "what_it_was_lacking": "Origin HTTP headers lack RateLimit-Limit / Quota budgets to stop Denial-of-Wallet or agent retry storms",
+      "what_it_has_to_be": "Hard per-goal max_calls, max_depth=3 lineage breaker, weighted fair queue, and Retry-After budgets",
+      "status": "LACKING",
+      "evidence_kind": "DETECTED",
+      "gateway_module": "budgets.py + scheduler.py"
+    },
+    {
+      "row_id": "multi_stack_discovery",
+      "pillar": "Pillar 3 \u00b7 Multi-Stack, Agent & Tool Discovery",
+      "dimension": "Multi-Stack UI & Backend Inspection (HTML / Java / JSS / SPA)",
+      "standard_ref": "02_MASTER_DEPLOYMENT_GUIDE \u00a72 & \u00a78.4 MCP/A2A (Model Context Protocol & Multi-Stack Surface Inspection)",
+      "threshold_source": "02_MASTER_DEPLOYMENT_GUIDE \u00a72 & \u00a78.4 MCP/A2A (Model Context Protocol & Multi-Stack Surface Inspection)",
+      "rule_description": "Pass/Detected if multi-stack tools or OpenAPI/MCP manifests detected; Not Detected Statically if static HTML scan finds no tools; Unknown if origin unreachable (status_code == 0).",
+      "thresholds": {
+        "min_inspectable_status": 200
+      },
+      "measured_current": "DETECTED: Stacks: Model Context Protocol (MCP) Manifest \u00b7 0 Agent(s) \u00b7 2 Tool(s)",
+      "what_it_was_lacking": "Plain HTML-only scanners miss Java (Spring Boot/AI, LangChain4j, JSP/JSF/Vaadin) and JSS/React client bundles",
+      "what_it_has_to_be": "Full-stack inspection across HTML, Java (.jsp/.do/ViewState/Actuator/Spring AI), JSS (makeStyles/MUI), JS bundles & MCP/A2A",
+      "status": "DETECTED",
+      "evidence_kind": "DETECTED",
+      "gateway_module": "zifi_browser.py (Multi-Stack Recon)"
+    },
+    {
+      "row_id": "repeat_trial_reliability",
+      "pillar": "Pillar 4 \u00b7 LLM & Agent Eval-Ops",
+      "dimension": "Repeat-Trial Reliability (pass^k) & Outcome State Assertion",
+      "standard_ref": "01_EVALUATIONS_AND_OPS \u00a74.2 & \u00a714 Glossary (pass^k All-Trials-Succeed Metric)",
+      "threshold_source": "01_EVALUATIONS_AND_OPS \u00a74.2 & \u00a714 Glossary (pass^k All-Trials-Succeed Metric)",
+      "rule_description": "Pass if pass^k >= 0.99 across k trials; Not Detected Statically if 0 active agents detected; Protected if 100% valid completion across trials with zero lost updates.",
+      "thresholds": {
+        "pass_k_threshold": 0.99,
+        "max_lost_updates": 0
+      },
+      "measured_current": "NOT_DETECTED_STATICALLY: 0 active agents detected in static scan \u2014 pass^k not applicable",
+      "what_it_was_lacking": "No automated L3/L5 agent stress harness or deterministic seed benchmark attached to endpoint",
+      "what_it_has_to_be": "pass^k \u2265 99% on valid tool calls \u00b7 Environment state assertion (0 lost updates) \u00b7 Deterministic seeded eval gate",
+      "status": "NOT_DETECTED_STATICALLY",
+      "evidence_kind": "NOT_DETECTED_STATICALLY",
+      "gateway_module": "pipeline.py + benchmark.py"
+    }
+  ]
+}
