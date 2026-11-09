@@ -1,0 +1,356 @@
+{
+  "case_id": "c_spring_actuator",
+  "class_name": "c) Spring Boot / Actuator / Swagger-UI app",
+  "target_url": "http://127.0.0.1:51768/spring-actuator",
+  "timestamp_utc": "2026-11-08T17:53:08Z",
+  "raw_http": {
+    "url": "http://127.0.0.1:51768/spring-actuator",
+    "fetched_at": 1794160386.5141125,
+    "raw_status_code": 200,
+    "raw_headers": {
+      "date": "Sun, 08 Nov 2026 17:53:07 GMT",
+      "server": "uvicorn",
+      "content-length": "504",
+      "content-type": "text/html; charset=utf-8",
+      "set-cookie": "JSESSIONID=A7F82C9014E; Path=/; HttpOnly",
+      "x-application-context": "order-service:8080"
+    },
+    "raw_content_preview": "<!doctype html>\n<html>\n<head>\n  <title>Spring Boot Actuator & LangChain4j Admin</title>\n</head>\n<body>\n  <h1>Spring Boot Enterprise Console</h1>\n  <p>Monitoring cluster with Spring AI and LangChain4j.</p>\n  <a href=\"/actuator/health\">Actuator Health</a>\n  <a href=\"/v3/api-docs\">Swagger UI / API Docs</a>\n  <form action=\"/orders/submit.do\" method=\"POST\">\n    <input type=\"hidden\" name=\"jakarta.faces.ViewState\" value=\"token123\" />\n    <button type=\"submit\">Submit Order</button>\n  </form>\n</body>\n</html>"
+  },
+  "recon_parsed": {
+    "url": "http://127.0.0.1:51768/spring-actuator",
+    "slug": "external-target",
+    "render_url": "/api/zifi/proxy?url=http://127.0.0.1:51768/spring-actuator",
+    "is_builtin": false,
+    "has_active_agents": true,
+    "project_id": "",
+    "title": "Spring Boot Actuator & LangChain4j Admin",
+    "domain": "127.0.0.1:51768",
+    "category": "External Target (HTML5 Document, Java Servlet / Jakarta EE Runtime (JSESSIONID))",
+    "tech_stack": [
+      "HTML5 Document",
+      "Java Servlet / Jakarta EE Runtime (JSESSIONID)",
+      "Spring Boot / Spring MVC / Thymeleaf",
+      "LangChain4j (Declarative AiServices / MCP)",
+      "JSP / Struts / Jakarta Server Pages (.jsp / .do / .action)",
+      "Jakarta Faces (JSF) / PrimeFaces (ViewState)"
+    ],
+    "status_code": 200,
+    "latency_ms": 9.2,
+    "latency_profile": {
+      "cold_total_ms": 9.2,
+      "ttfb_ms": 8.4,
+      "download_ms": 0.8,
+      "warm_p50_ms": 2.4,
+      "burst_3x_p95_ms": 8.3,
+      "degradation_ratio": 3.46,
+      "latency_cause": "Concurrent Burst Queueing Contention (3.46\u00d7 p95 spike)"
+    },
+    "security_headers": {
+      "has_csp": false,
+      "has_xfo": false,
+      "has_ratelimit": false,
+      "has_retry_after": false,
+      "has_etag": false,
+      "has_idempotency": false,
+      "has_traceparent": false,
+      "has_request_id": false
+    },
+    "frame_blocked": false,
+    "proxy_mode": "zifi_header_stripping_proxy",
+    "forms_detected": 1,
+    "interactive_elements": 4,
+    "agents_detected": [
+      {
+        "id": "langchain4j-agent",
+        "role": "Java LangChain4j Declarative AI Service Agent",
+        "kind": "agent",
+        "tools": [],
+        "source": "code_signature",
+        "evidence": "DETECTED"
+      }
+    ],
+    "tools_detected": [
+      {
+        "name": "java_form_1",
+        "kind": "tool",
+        "method": "POST",
+        "method_evidence": "DETECTED",
+        "path": "/orders/submit.do",
+        "risk": "Java JSP/JSF Form Action Surface",
+        "evidence": "DETECTED"
+      },
+      {
+        "name": "actuator_health",
+        "kind": "tool",
+        "method": "GET",
+        "method_evidence": "INFERRED",
+        "path": "/actuator/health",
+        "risk": "Java / Spring / MCP Endpoint",
+        "evidence": "DETECTED"
+      },
+      {
+        "name": "v3_api-docs",
+        "kind": "tool",
+        "method": "GET",
+        "method_evidence": "INFERRED",
+        "path": "/v3/api-docs",
+        "risk": "Discovered API Tool Endpoint",
+        "evidence": "DETECTED"
+      }
+    ],
+    "endpoints": [
+      {
+        "name": "java_form_1",
+        "kind": "tool",
+        "method": "POST",
+        "method_evidence": "DETECTED",
+        "path": "/orders/submit.do",
+        "risk": "Java JSP/JSF Form Action Surface",
+        "evidence": "DETECTED"
+      },
+      {
+        "name": "actuator_health",
+        "kind": "tool",
+        "method": "GET",
+        "method_evidence": "INFERRED",
+        "path": "/actuator/health",
+        "risk": "Java / Spring / MCP Endpoint",
+        "evidence": "DETECTED"
+      },
+      {
+        "name": "v3_api-docs",
+        "kind": "tool",
+        "method": "GET",
+        "method_evidence": "INFERRED",
+        "path": "/v3/api-docs",
+        "risk": "Discovered API Tool Endpoint",
+        "evidence": "DETECTED"
+      }
+    ],
+    "probe_waves": [
+      {
+        "seq": 1,
+        "wave": 1,
+        "agent_id": "zifi-recon-probe",
+        "method": "GET",
+        "endpoint": "/spring-actuator",
+        "exposed_status": "200 (TTFB 8.4ms \u00b7 Total 9.2ms)",
+        "gateway_status": null,
+        "gateway_action": "RECON_ONLY_NO_GATEWAY",
+        "latency_ms": 9.2,
+        "evidence_kind": "MEASURED"
+      },
+      {
+        "seq": 2,
+        "wave": 2,
+        "agent_id": "zifi-recon-probe",
+        "method": "HEAD",
+        "endpoint": "/spring-actuator",
+        "exposed_status": "200 (Warm p50 2.4ms)",
+        "gateway_status": null,
+        "gateway_action": "RECON_ONLY_NO_GATEWAY",
+        "latency_ms": 2.4,
+        "evidence_kind": "MEASURED"
+      },
+      {
+        "seq": 3,
+        "wave": 3,
+        "agent_id": "zifi-recon-probe (3x)",
+        "method": "HEAD",
+        "endpoint": "/spring-actuator?burst=3",
+        "exposed_status": "3/3 completed (3\u00d7 Burst p95 8.3ms)",
+        "gateway_status": null,
+        "gateway_action": "RECON_ONLY_NO_GATEWAY",
+        "latency_ms": 8.3,
+        "evidence_kind": "MEASURED"
+      }
+    ],
+    "probe_summary": {
+      "probes_sent": 5,
+      "probes_succeeded": 5,
+      "probes_errors": 0
+    },
+    "robots_txt_disallow": false,
+    "content_type": "text/html; charset=utf-8",
+    "error_note": null,
+    "vulnerabilities_without_gateway": [
+      "DETECTED: 1 agent declaration(s) without Agent Gateway admission/budget headers.",
+      "DETECTED: 3 callable tool/form surface(s) without fencing tokens or idempotency keys.",
+      "DETECTED (OWASP LLM06 / ASI08): Missing RateLimit-Limit / Retry-After headers for burst traffic protection."
+    ],
+    "evaluation_report": {
+      "overall_score": 56,
+      "grade": "C \u00b7 EXPOSED / LACKING CONTROLS",
+      "confidence": 87.1,
+      "site_posture": {
+        "score": 56,
+        "grade": "C \u00b7 ELEVATED RISK",
+        "confidence": 87.1
+      },
+      "gateway_effect": {
+        "measured": false,
+        "score": null,
+        "grade": "NOT MEASURED",
+        "confidence": 0.0,
+        "delta_summary": "Reconnaissance only \u2014 Gateway not in path (no load/probe test executed)"
+      },
+      "tech_stack": [
+        "HTML5 Document",
+        "Java Servlet / Jakarta EE Runtime (JSESSIONID)",
+        "Spring Boot / Spring MVC / Thymeleaf",
+        "LangChain4j (Declarative AiServices / MCP)",
+        "JSP / Struts / Jakarta Server Pages (.jsp / .do / .action)",
+        "Jakarta Faces (JSF) / PrimeFaces (ViewState)"
+      ],
+      "latency_profile": {
+        "cold_total_ms": 9.2,
+        "ttfb_ms": 8.4,
+        "download_ms": 0.8,
+        "warm_p50_ms": 2.4,
+        "burst_3x_p95_ms": 8.3,
+        "degradation_ratio": 3.46,
+        "latency_cause": "Concurrent Burst Queueing Contention (3.46\u00d7 p95 spike)"
+      },
+      "agents_count": 1,
+      "tools_count": 3,
+      "has_active_agents": true,
+      "benchmarks": [
+        {
+          "row_id": "latency_burst_tail",
+          "pillar": "Pillar 1 \u00b7 App, Latency & Telemetry",
+          "dimension": "Server TTFB & 3\u00d7 Burst Tail Latency (p95)",
+          "standard_ref": "04_TELEMETRY \u00a73.1 & \u00a77.1 (Web Latency SLO & Concurrent Burst Queueing Contention)",
+          "threshold_source": "04_TELEMETRY \u00a73.1 & \u00a77.1 (Web Latency SLO & Concurrent Burst Queueing Contention)",
+          "rule_description": "Pass if TTFB <= 250.0ms and degradation_ratio <= 1.8; Warn if TTFB > 250ms or degradation_ratio > 1.8; Unknown if latency unmeasured; Protected if Gateway admission control eliminates upstream 429s (errors == 0).",
+          "thresholds": {
+            "max_ttfb_ms": 250.0,
+            "max_degradation_ratio": 1.8,
+            "gateway_errors": 0
+          },
+          "measured_current": "MEASURED: Cold 9.2ms \u00b7 TTFB 8.4ms \u00b7 Warm p50 2.4ms \u00b7 3\u00d7 Burst p95 8.3ms (3.46\u00d7 ratio \u2014 Concurrent Burst Queueing Contention (3.46\u00d7 p95 spike))",
+          "what_it_was_lacking": "Burst p95 degrades 3.46\u00d7 (8.3ms) under concurrent load without admission queueing",
+          "what_it_has_to_be": "TTFB \u2264 250ms \u00b7 Burst p95 \u2264 1.8\u00d7 Warm p50 \u00b7 0 HTTP 429s via Adaptive Admission + Singleflight",
+          "status": "PASS",
+          "evidence_kind": "MEASURED",
+          "gateway_module": "admission.py + dedup.py"
+        },
+        {
+          "row_id": "opentelemetry_correlation",
+          "pillar": "Pillar 1 \u00b7 App, Latency & Telemetry",
+          "dimension": "OpenTelemetry GenAI Trace & Request Correlation",
+          "standard_ref": "04_TELEMETRY \u00a72.1 & \u00a74.5 (W3C TraceContext Recommendation & gen_ai.* span correlation)",
+          "threshold_source": "04_TELEMETRY \u00a72.1 & \u00a74.5 (W3C TraceContext Recommendation & gen_ai.* span correlation)",
+          "rule_description": "Pass if W3C traceparent or X-Request-ID detected in headers; Lacking if headers missing; Protected if 100% of Gateway requests carry call_id + parent_call_id + goal_id span tree.",
+          "thresholds": {
+            "min_traced_calls_pct": 100.0
+          },
+          "measured_current": "DETECTED: traceparent=False \u00b7 x-request-id=False",
+          "what_it_was_lacking": "Missing W3C traceparent / gen_ai.* span attributes & parent\u2192child sub-agent call lineage",
+          "what_it_has_to_be": "100% requests carry request_id/trace_id + parent_call_id span tree + token/cost attribution",
+          "status": "LACKING",
+          "evidence_kind": "DETECTED",
+          "gateway_module": "metrics.py + pipeline.py"
+        },
+        {
+          "row_id": "idempotency_concurrency",
+          "pillar": "Pillar 1 \u00b7 App, Latency & Telemetry",
+          "dimension": "Idempotency & Optimistic Concurrency (CAS / ETag)",
+          "standard_ref": "02_MASTER_DEPLOYMENT_GUIDE \u00a73.2 & \u00a75.7 (RFC 7232 ETag / If-Match & Martin Kleppmann Fencing Tokens)",
+          "threshold_source": "02_MASTER_DEPLOYMENT_GUIDE \u00a73.2 & \u00a75.7 (RFC 7232 ETag / If-Match & Martin Kleppmann Fencing Tokens)",
+          "rule_description": "Pass if ETag or Idempotency-Key present on mutative endpoints; Lacking if unversioned; Protected if CAS versioning & fencing tokens reduce lost writes to exactly 0.",
+          "thresholds": {
+            "max_lost_updates_allowed": 0
+          },
+          "measured_current": "DETECTED: ETag=False \u00b7 Idempotency-Key=False",
+          "what_it_was_lacking": "3 callable tool surface(s) lack If-Match CAS versioning and monotonic fencing tokens",
+          "what_it_has_to_be": "Monotonic fencing_token leases + If-Match: <version> CAS check returning 409 on stale writes (0 lost updates)",
+          "status": "LACKING",
+          "evidence_kind": "DETECTED",
+          "gateway_module": "locks.py + state.py"
+        },
+        {
+          "row_id": "lethal_trifecta_defense",
+          "pillar": "Pillar 2 \u00b7 AI & API Security (OWASP 2026)",
+          "dimension": "The Lethal Trifecta Defense (Input \u00d7 Tools \u00d7 Exfil)",
+          "standard_ref": "03_AI_SECURITY_PLAYBOOK \u00a70 & OWASP Top 10 for Agentic Applications 2026 (ASI01 / ASI02)",
+          "threshold_source": "03_AI_SECURITY_PLAYBOOK \u00a70 & OWASP Top 10 for Agentic Applications 2026 (ASI01 / ASI02)",
+          "rule_description": "Pass if CSP present or 0 declared agents with unmediated mutative tools; Lacking if agents have unmediated access to tools; Protected if YAML policy blocks unauthorized execution and pauses high-value refunds for approval.",
+          "thresholds": {
+            "unauthorized_executions": 0,
+            "approval_gate_enforced": true
+          },
+          "measured_current": "DETECTED: 1 agent(s) \u00d7 3 tool(s) \u00b7 CSP=False",
+          "what_it_was_lacking": "1 declared agent(s) have unmediated access to 3 tool(s) without policy authorization",
+          "what_it_has_to_be": "Enforce authorization outside the LLM: YAML tool allow-lists + read_only_agent rules + Human Approval Gate",
+          "status": "LACKING",
+          "evidence_kind": "DETECTED",
+          "gateway_module": "policy.py (YAML + Approval Gate)"
+        },
+        {
+          "row_id": "unbounded_consumption_cascades",
+          "pillar": "Pillar 2 \u00b7 AI & API Security (OWASP 2026)",
+          "dimension": "OWASP LLM06 Unbounded Consumption & ASI08 Cascading Failures",
+          "standard_ref": "03_AI_SECURITY_PLAYBOOK \u00a72 LLM06 & \u00a73 ASI08 (OWASP LLM06 Denial of Wallet & ASI08 Cascading Failures)",
+          "threshold_source": "03_AI_SECURITY_PLAYBOOK \u00a72 LLM06 & \u00a73 ASI08 (OWASP LLM06 Denial of Wallet & ASI08 Cascading Failures)",
+          "rule_description": "Pass if RateLimit or Retry-After headers present; Lacking if headers absent; Protected if recursive fan-out capped at depth <= 3 and in-flight duplicates coalesced.",
+          "thresholds": {
+            "max_depth": 3,
+            "upstream_429s": 0
+          },
+          "measured_current": "DETECTED: RateLimit headers=False \u00b7 Retry-After=False",
+          "what_it_was_lacking": "Origin HTTP headers lack RateLimit-Limit / Quota budgets to stop Denial-of-Wallet or agent retry storms",
+          "what_it_has_to_be": "Hard per-goal max_calls, max_depth=3 lineage breaker, weighted fair queue, and Retry-After budgets",
+          "status": "LACKING",
+          "evidence_kind": "DETECTED",
+          "gateway_module": "budgets.py + scheduler.py"
+        },
+        {
+          "row_id": "multi_stack_discovery",
+          "pillar": "Pillar 3 \u00b7 Multi-Stack, Agent & Tool Discovery",
+          "dimension": "Multi-Stack UI & Backend Inspection (HTML / Java / JSS / SPA)",
+          "standard_ref": "02_MASTER_DEPLOYMENT_GUIDE \u00a72 & \u00a78.4 MCP/A2A (Model Context Protocol & Multi-Stack Surface Inspection)",
+          "threshold_source": "02_MASTER_DEPLOYMENT_GUIDE \u00a72 & \u00a78.4 MCP/A2A (Model Context Protocol & Multi-Stack Surface Inspection)",
+          "rule_description": "Pass/Detected if multi-stack tools or OpenAPI/MCP manifests detected; Not Detected Statically if static HTML scan finds no tools; Unknown if origin unreachable (status_code == 0).",
+          "thresholds": {
+            "min_inspectable_status": 200
+          },
+          "measured_current": "DETECTED: Stacks: HTML5 Document, Java Servlet / Jakarta EE Runtime (JSESSIONID), Spring Boot / Spring MVC / Thymeleaf, LangChain4j (Declarative AiServices / MCP), JSP / Struts / Jakarta Server Pages (.jsp / .do / .action), Jakarta Faces (JSF) / PrimeFaces (ViewState) \u00b7 1 Agent(s) \u00b7 3 Tool(s)",
+          "what_it_was_lacking": "Plain HTML-only scanners miss Java (Spring Boot/AI, LangChain4j, JSP/JSF/Vaadin) and JSS/React client bundles",
+          "what_it_has_to_be": "Full-stack inspection across HTML, Java (.jsp/.do/ViewState/Actuator/Spring AI), JSS (makeStyles/MUI), JS bundles & MCP/A2A",
+          "status": "DETECTED",
+          "evidence_kind": "DETECTED",
+          "gateway_module": "zifi_browser.py (Multi-Stack Recon)"
+        },
+        {
+          "row_id": "repeat_trial_reliability",
+          "pillar": "Pillar 4 \u00b7 LLM & Agent Eval-Ops",
+          "dimension": "Repeat-Trial Reliability (pass^k) & Outcome State Assertion",
+          "standard_ref": "01_EVALUATIONS_AND_OPS \u00a74.2 & \u00a714 Glossary (pass^k All-Trials-Succeed Metric)",
+          "threshold_source": "01_EVALUATIONS_AND_OPS \u00a74.2 & \u00a714 Glossary (pass^k All-Trials-Succeed Metric)",
+          "rule_description": "Pass if pass^k >= 0.99 across k trials; Not Detected Statically if 0 active agents detected; Protected if 100% valid completion across trials with zero lost updates.",
+          "thresholds": {
+            "pass_k_threshold": 0.99,
+            "max_lost_updates": 0
+          },
+          "measured_current": "DETECTED: 1 declared autonomous agent(s) (pass^k not measured \u2014 run audit on owned target)",
+          "what_it_was_lacking": "No automated pass^k or state assertion harness attached to declared agent(s) (langchain4j-agent)",
+          "what_it_has_to_be": "pass^k \u2265 99% on valid tool calls \u00b7 Environment state assertion (0 lost updates) \u00b7 Deterministic seeded eval gate",
+          "status": "WARN",
+          "evidence_kind": "DETECTED",
+          "gateway_module": "pipeline.py + benchmark.py"
+        }
+      ]
+    }
+  },
+  "expected": {
+    "status_code": 200,
+    "tech_stack_contains": [
+      "Spring Boot",
+      "Jakarta Faces",
+      "Java Servlet"
+    ],
+    "tools_count_gte": 1,
+    "evidence_rule": "DETECTED"
+  }
+}

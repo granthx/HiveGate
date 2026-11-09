@@ -1,0 +1,384 @@
+{
+  "case_id": "m1_builtin_aegis",
+  "class_name": "m) Built-in target 1: aegis-store",
+  "target_url": "http://127.0.0.1:8010/targets/aegis-store",
+  "timestamp_utc": "2026-11-08T17:53:33Z",
+  "raw_http": {
+    "url": "http://127.0.0.1:8010/targets/aegis-store",
+    "fetched_at": 1794160410.8442793,
+    "fetch_error": "All connection attempts failed"
+  },
+  "recon_parsed": {
+    "url": "http://127.0.0.1:8010/targets/aegis-store",
+    "slug": "aegis-store",
+    "render_url": "/targets/aegis-store",
+    "is_builtin": true,
+    "has_active_agents": true,
+    "project_id": "aegis-commerce",
+    "title": "Aegis Commerce \u2014 Flash Sale & VIP Order Portal",
+    "domain": "store.aegis-commerce.internal",
+    "category": "E-Commerce & Order Operations",
+    "tech_stack": [
+      "HTML5 / Risograph UI",
+      "FastAPI Async Backend",
+      "React / JSS Component Styles",
+      "LangGraph + Groq Swarm Runtime"
+    ],
+    "status_code": 200,
+    "latency_ms": null,
+    "latency_profile": {
+      "cold_total_ms": null,
+      "ttfb_ms": null,
+      "download_ms": null,
+      "warm_p50_ms": null,
+      "burst_3x_p95_ms": null,
+      "degradation_ratio": null,
+      "latency_cause": "not measured (run audit to measure)"
+    },
+    "security_headers": {
+      "has_csp": false,
+      "has_xfo": false,
+      "has_ratelimit": false,
+      "has_retry_after": false,
+      "has_etag": false,
+      "has_idempotency": false,
+      "has_traceparent": false,
+      "has_request_id": false
+    },
+    "frame_blocked": false,
+    "proxy_mode": "direct_interactive_target",
+    "forms_detected": 3,
+    "interactive_elements": 6,
+    "agents_detected": [
+      {
+        "id": "orchestrator-aegis",
+        "role": "Order Operations Lead Agent",
+        "kind": "agent",
+        "tools": [
+          "read"
+        ],
+        "source": "swarm_manifest",
+        "evidence": "DETECTED"
+      },
+      {
+        "id": "reader-00..35",
+        "role": "36\u00d7 Catalog & Order Reader Sub-Agents",
+        "kind": "agent",
+        "tools": [
+          "read"
+        ],
+        "source": "swarm_manifest",
+        "evidence": "DETECTED"
+      },
+      {
+        "id": "writer-00..07",
+        "role": "8\u00d7 Fenced Inventory Ledger Writers",
+        "kind": "agent",
+        "tools": [
+          "guarded_write"
+        ],
+        "source": "swarm_manifest",
+        "evidence": "DETECTED"
+      },
+      {
+        "id": "tracer-d1..d4",
+        "role": "Recursive Shipment Hop Tracers (2^d)",
+        "kind": "agent",
+        "tools": [
+          "read (tree)"
+        ],
+        "source": "swarm_manifest",
+        "evidence": "DETECTED"
+      },
+      {
+        "id": "reader-audit-01",
+        "role": "Read-Only Compliance Verifier",
+        "kind": "agent",
+        "tools": [
+          "delete (blocked)"
+        ],
+        "source": "swarm_manifest",
+        "evidence": "DETECTED"
+      },
+      {
+        "id": "support-lead-01",
+        "role": "VIP Dispute & Refund Specialist",
+        "kind": "agent",
+        "tools": [
+          "refund"
+        ],
+        "source": "swarm_manifest",
+        "evidence": "DETECTED"
+      }
+    ],
+    "tools_detected": [
+      {
+        "name": "read_order_catalog",
+        "kind": "tool",
+        "method": "GET",
+        "path": "/api/orders/order-hot-901",
+        "risk": "High Burst Read (Duplicate Storm)",
+        "evidence": "DETECTED",
+        "method_evidence": "DETECTED"
+      },
+      {
+        "name": "reserve_inventory_sku",
+        "kind": "tool",
+        "method": "POST",
+        "path": "/api/inventory/sku-flash-77/reserve",
+        "risk": "Concurrent Write Race (Lost Updates)",
+        "evidence": "DETECTED",
+        "method_evidence": "DETECTED"
+      },
+      {
+        "name": "trace_shipment_hop",
+        "kind": "tool",
+        "method": "GET",
+        "path": "/api/shipments/trace-hop",
+        "risk": "Recursive Sub-Agent Fan-Out",
+        "evidence": "DETECTED",
+        "method_evidence": "DETECTED"
+      },
+      {
+        "name": "issue_vip_refund",
+        "kind": "tool",
+        "method": "POST",
+        "path": "/api/refunds/issue",
+        "risk": "High-Value Financial Action ($280)",
+        "evidence": "DETECTED",
+        "method_evidence": "DETECTED"
+      },
+      {
+        "name": "purge_audit_log",
+        "kind": "tool",
+        "method": "DELETE",
+        "path": "/api/compliance/audit-log",
+        "risk": "Destructive Mutation",
+        "evidence": "DETECTED",
+        "method_evidence": "DETECTED"
+      }
+    ],
+    "endpoints": [
+      {
+        "name": "read_order_catalog",
+        "kind": "tool",
+        "method": "GET",
+        "path": "/api/orders/order-hot-901",
+        "risk": "High Burst Read (Duplicate Storm)",
+        "evidence": "DETECTED",
+        "method_evidence": "DETECTED"
+      },
+      {
+        "name": "reserve_inventory_sku",
+        "kind": "tool",
+        "method": "POST",
+        "path": "/api/inventory/sku-flash-77/reserve",
+        "risk": "Concurrent Write Race (Lost Updates)",
+        "evidence": "DETECTED",
+        "method_evidence": "DETECTED"
+      },
+      {
+        "name": "trace_shipment_hop",
+        "kind": "tool",
+        "method": "GET",
+        "path": "/api/shipments/trace-hop",
+        "risk": "Recursive Sub-Agent Fan-Out",
+        "evidence": "DETECTED",
+        "method_evidence": "DETECTED"
+      },
+      {
+        "name": "issue_vip_refund",
+        "kind": "tool",
+        "method": "POST",
+        "path": "/api/refunds/issue",
+        "risk": "High-Value Financial Action ($280)",
+        "evidence": "DETECTED",
+        "method_evidence": "DETECTED"
+      },
+      {
+        "name": "purge_audit_log",
+        "kind": "tool",
+        "method": "DELETE",
+        "path": "/api/compliance/audit-log",
+        "risk": "Destructive Mutation",
+        "evidence": "DETECTED",
+        "method_evidence": "DETECTED"
+      }
+    ],
+    "vulnerabilities_without_gateway": [
+      "DETECTED: No singleflight deduplication on burst GET endpoints (vulnerable to 429 cascade)",
+      "DETECTED: Unfenced concurrent POST state mutations (vulnerable to lost updates)",
+      "DETECTED: Unbounded sub-agent recursion depth on graph/trace endpoints",
+      "DETECTED: Missing human-in-the-loop approval gate on high-value POST actions"
+    ],
+    "evaluation_report": {
+      "overall_score": 51,
+      "grade": "C \u00b7 EXPOSED / LACKING CONTROLS",
+      "confidence": 72.9,
+      "site_posture": {
+        "score": 51,
+        "grade": "C \u00b7 ELEVATED RISK",
+        "confidence": 72.9
+      },
+      "gateway_effect": {
+        "measured": false,
+        "score": null,
+        "grade": "NOT MEASURED",
+        "confidence": 0.0,
+        "delta_summary": "Reconnaissance only \u2014 Gateway not in path (no load/probe test executed)"
+      },
+      "tech_stack": [
+        "HTML5 / Risograph UI",
+        "FastAPI Async Backend",
+        "React / JSS Component Styles",
+        "LangGraph + Groq Swarm Runtime"
+      ],
+      "latency_profile": {
+        "cold_total_ms": null,
+        "ttfb_ms": null,
+        "download_ms": null,
+        "warm_p50_ms": null,
+        "burst_3x_p95_ms": null,
+        "degradation_ratio": null,
+        "latency_cause": "not measured (run audit to measure)"
+      },
+      "agents_count": 6,
+      "tools_count": 5,
+      "has_active_agents": true,
+      "benchmarks": [
+        {
+          "row_id": "latency_burst_tail",
+          "pillar": "Pillar 1 \u00b7 App, Latency & Telemetry",
+          "dimension": "Server TTFB & 3\u00d7 Burst Tail Latency (p95)",
+          "standard_ref": "04_TELEMETRY \u00a73.1 & \u00a77.1 (Web Latency SLO & Concurrent Burst Queueing Contention)",
+          "threshold_source": "04_TELEMETRY \u00a73.1 & \u00a77.1 (Web Latency SLO & Concurrent Burst Queueing Contention)",
+          "rule_description": "Pass if TTFB <= 250.0ms and degradation_ratio <= 1.8; Warn if TTFB > 250ms or degradation_ratio > 1.8; Unknown if latency unmeasured; Protected if Gateway admission control eliminates upstream 429s (errors == 0).",
+          "thresholds": {
+            "max_ttfb_ms": 250.0,
+            "max_degradation_ratio": 1.8,
+            "gateway_errors": 0
+          },
+          "measured_current": "not measured (not measured (run audit to measure))",
+          "what_it_was_lacking": "Latency not measured (no live probe or benchmark run yet)",
+          "what_it_has_to_be": "TTFB \u2264 250ms \u00b7 Burst p95 \u2264 1.8\u00d7 Warm p50 \u00b7 0 HTTP 429s via Adaptive Admission + Singleflight",
+          "status": "UNKNOWN",
+          "evidence_kind": "UNKNOWN",
+          "gateway_module": "admission.py + dedup.py"
+        },
+        {
+          "row_id": "opentelemetry_correlation",
+          "pillar": "Pillar 1 \u00b7 App, Latency & Telemetry",
+          "dimension": "OpenTelemetry GenAI Trace & Request Correlation",
+          "standard_ref": "04_TELEMETRY \u00a72.1 & \u00a74.5 (W3C TraceContext Recommendation & gen_ai.* span correlation)",
+          "threshold_source": "04_TELEMETRY \u00a72.1 & \u00a74.5 (W3C TraceContext Recommendation & gen_ai.* span correlation)",
+          "rule_description": "Pass if W3C traceparent or X-Request-ID detected in headers; Lacking if headers missing; Protected if 100% of Gateway requests carry call_id + parent_call_id + goal_id span tree.",
+          "thresholds": {
+            "min_traced_calls_pct": 100.0
+          },
+          "measured_current": "DETECTED: traceparent=False \u00b7 x-request-id=False",
+          "what_it_was_lacking": "Missing W3C traceparent / gen_ai.* span attributes & parent\u2192child sub-agent call lineage",
+          "what_it_has_to_be": "100% requests carry request_id/trace_id + parent_call_id span tree + token/cost attribution",
+          "status": "LACKING",
+          "evidence_kind": "DETECTED",
+          "gateway_module": "metrics.py + pipeline.py"
+        },
+        {
+          "row_id": "idempotency_concurrency",
+          "pillar": "Pillar 1 \u00b7 App, Latency & Telemetry",
+          "dimension": "Idempotency & Optimistic Concurrency (CAS / ETag)",
+          "standard_ref": "02_MASTER_DEPLOYMENT_GUIDE \u00a73.2 & \u00a75.7 (RFC 7232 ETag / If-Match & Martin Kleppmann Fencing Tokens)",
+          "threshold_source": "02_MASTER_DEPLOYMENT_GUIDE \u00a73.2 & \u00a75.7 (RFC 7232 ETag / If-Match & Martin Kleppmann Fencing Tokens)",
+          "rule_description": "Pass if ETag or Idempotency-Key present on mutative endpoints; Lacking if unversioned; Protected if CAS versioning & fencing tokens reduce lost writes to exactly 0.",
+          "thresholds": {
+            "max_lost_updates_allowed": 0
+          },
+          "measured_current": "DETECTED: ETag=False \u00b7 Idempotency-Key=False",
+          "what_it_was_lacking": "5 callable tool surface(s) lack If-Match CAS versioning and monotonic fencing tokens",
+          "what_it_has_to_be": "Monotonic fencing_token leases + If-Match: <version> CAS check returning 409 on stale writes (0 lost updates)",
+          "status": "LACKING",
+          "evidence_kind": "DETECTED",
+          "gateway_module": "locks.py + state.py"
+        },
+        {
+          "row_id": "lethal_trifecta_defense",
+          "pillar": "Pillar 2 \u00b7 AI & API Security (OWASP 2026)",
+          "dimension": "The Lethal Trifecta Defense (Input \u00d7 Tools \u00d7 Exfil)",
+          "standard_ref": "03_AI_SECURITY_PLAYBOOK \u00a70 & OWASP Top 10 for Agentic Applications 2026 (ASI01 / ASI02)",
+          "threshold_source": "03_AI_SECURITY_PLAYBOOK \u00a70 & OWASP Top 10 for Agentic Applications 2026 (ASI01 / ASI02)",
+          "rule_description": "Pass if CSP present or 0 declared agents with unmediated mutative tools; Lacking if agents have unmediated access to tools; Protected if YAML policy blocks unauthorized execution and pauses high-value refunds for approval.",
+          "thresholds": {
+            "unauthorized_executions": 0,
+            "approval_gate_enforced": true
+          },
+          "measured_current": "DETECTED: 6 agent(s) \u00d7 5 tool(s) \u00b7 CSP=False",
+          "what_it_was_lacking": "6 declared agent(s) have unmediated access to 5 tool(s) without policy authorization",
+          "what_it_has_to_be": "Enforce authorization outside the LLM: YAML tool allow-lists + read_only_agent rules + Human Approval Gate",
+          "status": "LACKING",
+          "evidence_kind": "DETECTED",
+          "gateway_module": "policy.py (YAML + Approval Gate)"
+        },
+        {
+          "row_id": "unbounded_consumption_cascades",
+          "pillar": "Pillar 2 \u00b7 AI & API Security (OWASP 2026)",
+          "dimension": "OWASP LLM06 Unbounded Consumption & ASI08 Cascading Failures",
+          "standard_ref": "03_AI_SECURITY_PLAYBOOK \u00a72 LLM06 & \u00a73 ASI08 (OWASP LLM06 Denial of Wallet & ASI08 Cascading Failures)",
+          "threshold_source": "03_AI_SECURITY_PLAYBOOK \u00a72 LLM06 & \u00a73 ASI08 (OWASP LLM06 Denial of Wallet & ASI08 Cascading Failures)",
+          "rule_description": "Pass if RateLimit or Retry-After headers present; Lacking if headers absent; Protected if recursive fan-out capped at depth <= 3 and in-flight duplicates coalesced.",
+          "thresholds": {
+            "max_depth": 3,
+            "upstream_429s": 0
+          },
+          "measured_current": "DETECTED: RateLimit headers=False \u00b7 Retry-After=False",
+          "what_it_was_lacking": "Origin HTTP headers lack RateLimit-Limit / Quota budgets to stop Denial-of-Wallet or agent retry storms",
+          "what_it_has_to_be": "Hard per-goal max_calls, max_depth=3 lineage breaker, weighted fair queue, and Retry-After budgets",
+          "status": "LACKING",
+          "evidence_kind": "DETECTED",
+          "gateway_module": "budgets.py + scheduler.py"
+        },
+        {
+          "row_id": "multi_stack_discovery",
+          "pillar": "Pillar 3 \u00b7 Multi-Stack, Agent & Tool Discovery",
+          "dimension": "Multi-Stack UI & Backend Inspection (HTML / Java / JSS / SPA)",
+          "standard_ref": "02_MASTER_DEPLOYMENT_GUIDE \u00a72 & \u00a78.4 MCP/A2A (Model Context Protocol & Multi-Stack Surface Inspection)",
+          "threshold_source": "02_MASTER_DEPLOYMENT_GUIDE \u00a72 & \u00a78.4 MCP/A2A (Model Context Protocol & Multi-Stack Surface Inspection)",
+          "rule_description": "Pass/Detected if multi-stack tools or OpenAPI/MCP manifests detected; Not Detected Statically if static HTML scan finds no tools; Unknown if origin unreachable (status_code == 0).",
+          "thresholds": {
+            "min_inspectable_status": 200
+          },
+          "measured_current": "DETECTED: Stacks: HTML5 / Risograph UI, FastAPI Async Backend, React / JSS Component Styles, LangGraph + Groq Swarm Runtime \u00b7 6 Agent(s) \u00b7 5 Tool(s)",
+          "what_it_was_lacking": "Plain HTML-only scanners miss Java (Spring Boot/AI, LangChain4j, JSP/JSF/Vaadin) and JSS/React client bundles",
+          "what_it_has_to_be": "Full-stack inspection across HTML, Java (.jsp/.do/ViewState/Actuator/Spring AI), JSS (makeStyles/MUI), JS bundles & MCP/A2A",
+          "status": "DETECTED",
+          "evidence_kind": "DETECTED",
+          "gateway_module": "zifi_browser.py (Multi-Stack Recon)"
+        },
+        {
+          "row_id": "repeat_trial_reliability",
+          "pillar": "Pillar 4 \u00b7 LLM & Agent Eval-Ops",
+          "dimension": "Repeat-Trial Reliability (pass^k) & Outcome State Assertion",
+          "standard_ref": "01_EVALUATIONS_AND_OPS \u00a74.2 & \u00a714 Glossary (pass^k All-Trials-Succeed Metric)",
+          "threshold_source": "01_EVALUATIONS_AND_OPS \u00a74.2 & \u00a714 Glossary (pass^k All-Trials-Succeed Metric)",
+          "rule_description": "Pass if pass^k >= 0.99 across k trials; Not Detected Statically if 0 active agents detected; Protected if 100% valid completion across trials with zero lost updates.",
+          "thresholds": {
+            "pass_k_threshold": 0.99,
+            "max_lost_updates": 0
+          },
+          "measured_current": "DETECTED: 6 declared autonomous agent(s) (pass^k not measured \u2014 run audit on owned target)",
+          "what_it_was_lacking": "No automated pass^k or state assertion harness attached to declared agent(s) (orchestrator-aegis, reader-00..35)",
+          "what_it_has_to_be": "pass^k \u2265 99% on valid tool calls \u00b7 Environment state assertion (0 lost updates) \u00b7 Deterministic seeded eval gate",
+          "status": "WARN",
+          "evidence_kind": "DETECTED",
+          "gateway_module": "pipeline.py + benchmark.py"
+        }
+      ]
+    }
+  },
+  "expected": {
+    "is_builtin": true,
+    "has_active_agents": true,
+    "agents_count": 6,
+    "tools_count": 5,
+    "latency_ms_is_none": true,
+    "evidence_rule": "DETECTED"
+  }
+}
