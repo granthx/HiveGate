@@ -1,0 +1,119 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <!-- Background Radial Gradient -->
+    <radialGradient id="bgGrad" cx="50%" cy="45%" r="65%">
+      <stop offset="0%" stop-color="#1A1C24"/>
+      <stop offset="70%" stop-color="#0C0D12"/>
+      <stop offset="100%" stop-color="#050608"/>
+    </radialGradient>
+
+    <!-- Metallic Amber Gold Gradient -->
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFF176"/>
+      <stop offset="35%" stop-color="#FFB300"/>
+      <stop offset="75%" stop-color="#FF8F00"/>
+      <stop offset="100%" stop-color="#FF6F00"/>
+    </linearGradient>
+
+    <!-- Wing Gradients -->
+    <linearGradient id="wingGradL" x1="100%" y1="50%" x2="0%" y2="50%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.95"/>
+      <stop offset="50%" stop-color="#FFE082" stop-opacity="0.85"/>
+      <stop offset="100%" stop-color="#FFB300" stop-opacity="0.6"/>
+    </linearGradient>
+
+    <linearGradient id="wingGradR" x1="0%" y1="50%" x2="100%" y2="50%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.95"/>
+      <stop offset="50%" stop-color="#FFE082" stop-opacity="0.85"/>
+      <stop offset="100%" stop-color="#FFB300" stop-opacity="0.6"/>
+    </linearGradient>
+
+    <!-- Gateway Portal Beam Gradient -->
+    <linearGradient id="portalBeam" x1="50%" y1="100%" x2="50%" y2="0%">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="30%" stop-color="#FFE082"/>
+      <stop offset="100%" stop-color="#FF8F00" stop-opacity="0"/>
+    </linearGradient>
+
+    <!-- Glow Filter -->
+    <filter id="goldGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+
+  <!-- App Squircle Backdrop -->
+  <rect x="20" y="20" width="472" height="472" rx="108" fill="url(#bgGrad)" stroke="#FFB300" stroke-width="8" stroke-opacity="0.45"/>
+
+  <!-- Subtle Hive Grid Background Pattern -->
+  <g stroke="#FFB300" stroke-width="1.8" stroke-opacity="0.14" fill="none">
+    <polygon points="256,48 326,88 326,168 256,208 186,168 186,88"/>
+    <polygon points="126,124 196,164 196,244 126,284 56,244 56,164"/>
+    <polygon points="386,124 456,164 456,244 386,284 316,244 316,164"/>
+  </g>
+
+  <!-- Cyber Hexagon Gateway Outer Frame -->
+  <g filter="url(#goldGlow)">
+    <!-- Top Honeycomb Arch -->
+    <path d="M 256 70 L 396 148 L 396 250 L 362 250 L 362 168 L 256 110 L 150 168 L 150 250 L 116 250 L 116 148 Z" fill="url(#goldGrad)"/>
+
+    <!-- Bottom Left & Right Gateway Walls -->
+    <path d="M 116 250 L 150 250 L 150 348 L 212 384 L 212 444 L 116 388 Z" fill="url(#goldGrad)"/>
+    <path d="M 396 250 L 362 250 L 362 348 L 300 384 L 300 444 L 396 388 Z" fill="url(#goldGrad)"/>
+
+    <!-- Central Gateway Archway / Portal Entry -->
+    <path d="M 224 444 L 224 374 L 256 350 L 288 374 L 288 444 Z" fill="none" stroke="url(#goldGrad)" stroke-width="12" stroke-linejoin="round"/>
+    <!-- Portal Light Beam -->
+    <polygon points="238,444 274,444 266,310 246,310" fill="url(#portalBeam)" opacity="0.85"/>
+  </g>
+
+  <!-- Central Cyber Bee -->
+  <g>
+    <!-- Antennas with Glowing Nodes -->
+    <path d="M 240 178 Q 212 136 182 148" fill="none" stroke="#FFE57F" stroke-width="8" stroke-linecap="round"/>
+    <circle cx="182" cy="148" r="7" fill="#FFE57F" filter="url(#goldGlow)"/>
+
+    <path d="M 272 178 Q 300 136 330 148" fill="none" stroke="#FFE57F" stroke-width="8" stroke-linecap="round"/>
+    <circle cx="330" cy="148" r="7" fill="#FFE57F" filter="url(#goldGlow)"/>
+
+    <!-- Faceted Cyber Wings - Left -->
+    <g filter="url(#goldGlow)">
+      <polygon points="232,222 96,188 124,244 218,250" fill="url(#wingGradL)"/>
+      <polygon points="218,254 136,254 162,290 226,270" fill="url(#wingGradL)" opacity="0.85"/>
+      <polygon points="232,222 96,188 138,210" fill="#FFFFFF" opacity="0.75"/>
+    </g>
+
+    <!-- Faceted Cyber Wings - Right -->
+    <g filter="url(#goldGlow)">
+      <polygon points="280,222 416,188 388,244 294,250" fill="url(#wingGradR)"/>
+      <polygon points="294,254 376,254 350,290 286,270" fill="url(#wingGradR)" opacity="0.85"/>
+      <polygon points="280,222 416,188 374,210" fill="#FFFFFF" opacity="0.75"/>
+    </g>
+
+    <!-- Bee Head -->
+    <path d="M 256 164 C 274 164 286 178 286 194 C 286 202 274 210 256 210 C 238 210 226 202 226 194 C 226 178 238 164 256 164 Z" fill="url(#goldGrad)"/>
+
+    <!-- Bee Thorax Core with Diamond Inset -->
+    <path d="M 256 210 L 292 240 L 256 270 L 220 240 Z" fill="url(#goldGrad)"/>
+    <polygon points="256,220 280,240 256,260 232,240" fill="#FFF9C4" filter="url(#goldGlow)"/>
+
+    <!-- Bee Abdomen Striped Segments -->
+    <!-- Segment 1 -->
+    <path d="M 226 276 L 286 276 L 280 296 L 232 296 Z" fill="url(#goldGrad)"/>
+    <!-- Dark Stripe 1 -->
+    <path d="M 232 296 L 280 296 L 276 308 L 236 308 Z" fill="#0C0D12"/>
+    <!-- Segment 2 -->
+    <path d="M 236 308 L 276 308 L 270 328 L 242 328 Z" fill="url(#goldGrad)"/>
+    <!-- Dark Stripe 2 -->
+    <path d="M 242 328 L 270 328 L 265 340 L 247 340 Z" fill="#0C0D12"/>
+    <!-- Stinger / Tail Tip -->
+    <polygon points="247,340 265,340 256,370" fill="url(#goldGrad)"/>
+  </g>
+
+  <!-- Node Dots (Agent Swarm Orbit Points) -->
+  <circle cx="116" cy="148" r="6" fill="#FFE57F" filter="url(#goldGlow)"/>
+  <circle cx="396" cy="148" r="6" fill="#FFE57F" filter="url(#goldGlow)"/>
+  <circle cx="256" cy="70" r="6" fill="#FFE57F" filter="url(#goldGlow)"/>
+  <circle cx="116" cy="388" r="6" fill="#FFE57F" filter="url(#goldGlow)"/>
+  <circle cx="396" cy="388" r="6" fill="#FFE57F" filter="url(#goldGlow)"/>
+</svg>

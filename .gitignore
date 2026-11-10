@@ -12,6 +12,9 @@ venv/
 .env.*
 !.env.example
 
+# Reference assets
+Cyber Hive Gateway Bees.png
+
 # Scratch output
 results/benchmark-quick.json
 demo/dashboard/_check.js
