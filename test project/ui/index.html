@@ -2709,6 +2709,26 @@ await gw.call(goal_id="g1", agent_id="a1", tool="read")</pre>
       window.print();
     });
 
+    // Auto-adapt preset URLs to current origin when deployed
+    if (!window.location.hostname.includes("127.0.0.1") && !window.location.hostname.includes("localhost")) {
+      const origin = window.location.origin;
+      const select = document.getElementById("preset-select");
+      if (select) {
+        Array.from(select.options).forEach(opt => {
+          if (opt.value && opt.value.includes("8010")) {
+            opt.value = opt.value.replace(/http:\/\/127\.0\.0\.1:8010/g, origin);
+          }
+        });
+      }
+      const input = document.getElementById("zifi-url-input");
+      if (input && input.value.includes("8010")) {
+        input.value = input.value.replace(/http:\/\/127\.0\.0\.1:8010/g, origin);
+      }
+      if (state.currentUrl && state.currentUrl.includes("8010")) {
+        state.currentUrl = state.currentUrl.replace(/http:\/\/127\.0\.0\.1:8010/g, origin);
+      }
+    }
+
     loadBootState();
   </script>
 </body>

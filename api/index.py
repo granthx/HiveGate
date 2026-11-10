@@ -24,6 +24,18 @@ from server import create_projects_app
 # 1. Instantiate the Core Gateway Application
 app = create_gateway_app()
 
+@app.get("/")
+async def root_status() -> dict[str, str]:
+    return {
+        "name": "HiveGate",
+        "description": "Goal-Aware Control Plane for Autonomous Agent Swarms",
+        "status": "online",
+        "health": "/health",
+        "ready": "/ready",
+        "metrics": "/metrics",
+        "version": "1.0.0",
+    }
+
 # 2. Configure CORS to allow Cloudflare Pages, custom domains, and local frontends
 cors_env = os.getenv("CORS_ORIGINS", "")
 allowed_origins = [o.strip() for o in cors_env.split(",") if o.strip()] if cors_env else ["*"]

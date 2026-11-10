@@ -1,0 +1,6 @@
+/api/*     https://hive-gate.vercel.app/api/:splat     200
+/v1/*      https://hive-gate.vercel.app/v1/:splat      200
+/targets/* https://hive-gate.vercel.app/targets/:splat 200
+/health    https://hive-gate.vercel.app/health         200
+/ready     https://hive-gate.vercel.app/ready          200
+/metrics   https://hive-gate.vercel.app/metrics        200
