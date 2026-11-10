@@ -4,3 +4,4 @@
 /health    https://hive-gate.vercel.app/health         200
 /ready     https://hive-gate.vercel.app/ready          200
 /metrics   https://hive-gate.vercel.app/metrics        200
+

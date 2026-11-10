@@ -4,6 +4,12 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Zifi Browser — Risograph Audit Print</title>
+  <script>
+    // Frame-busting guard: Prevent recursive embedding inside an iframe
+    if (window.self !== window.top) {
+      window.top.location = window.self.location;
+    }
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@800&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;600&display=swap" rel="stylesheet">
@@ -1282,7 +1288,7 @@
             <iframe
               id="zifi-iframe"
               class="zifi-iframe"
-              src="/targets/aegis-store"
+              src="/targets/aegis-store/index.html"
               title="Zifi Live Target Sandbox"
             ></iframe>
           </div>
@@ -1612,6 +1618,10 @@ await gw.call(goal_id="g1", agent_id="a1", tool="read")</pre>
   </div>
 
   <script>
+    const API_BASE = (window.location.hostname.includes("pages.dev") || !["localhost", "127.0.0.1"].includes(window.location.hostname))
+      ? "https://hive-gate.vercel.app"
+      : "";
+
     const state = {
       currentUrl: "http://127.0.0.1:8010/targets/aegis-store",
       currentProjectId: "aegis-commerce",
@@ -1793,10 +1803,10 @@ await gw.call(goal_id="g1", agent_id="a1", tool="read")</pre>
 
     async function loadBootState() {
       try {
-        const res = await fetch("/api/projects");
+        const res = await fetch(`${API_BASE}/api/projects`);
         const data = await res.json();
         updateStatusIndicators(data);
-        const reconRes = await fetch("/api/zifi/recon", {
+        const reconRes = await fetch(`${API_BASE}/api/zifi/recon`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ url: state.currentUrl }),
@@ -1857,19 +1867,19 @@ await gw.call(goal_id="g1", agent_id="a1", tool="read")</pre>
 
       if (url.includes("/targets/sentinel-console")) {
         state.currentProjectId = "sentinel-ops";
-        frame.src = "/targets/sentinel-console";
+        frame.src = "/targets/sentinel-console/index.html";
       } else if (url.includes("/targets/quant-desk")) {
         state.currentProjectId = "quant-pulse";
-        frame.src = "/targets/quant-desk";
+        frame.src = "/targets/quant-desk/index.html";
       } else if (url.includes("/targets/java-spring-jss")) {
         state.currentProjectId = "java-spring-jss";
-        frame.src = "/targets/java-spring-jss";
+        frame.src = "/targets/java-spring-jss/index.html";
       } else if (url.includes("/targets/aegis-store")) {
         state.currentProjectId = "aegis-commerce";
-        frame.src = "/targets/aegis-store";
+        frame.src = "/targets/aegis-store/index.html";
       } else {
         state.currentProjectId = "";
-        frame.src = `/api/zifi/proxy?url=${encodeURIComponent(url)}`;
+        frame.src = `${API_BASE}/api/zifi/proxy?url=${encodeURIComponent(url)}`;
       }
 
       frame.onload = () => {
@@ -1877,7 +1887,7 @@ await gw.call(goal_id="g1", agent_id="a1", tool="read")</pre>
       };
 
       try {
-        const res = await fetch("/api/zifi/recon", {
+        const res = await fetch(`${API_BASE}/api/zifi/recon`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ url }),
@@ -2036,7 +2046,7 @@ await gw.call(goal_id="g1", agent_id="a1", tool="read")</pre>
       btn.textContent = "SCANNING...";
 
       try {
-        const res = await fetch("/api/zifi/audit", {
+        const res = await fetch(`${API_BASE}/api/zifi/audit`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -2585,7 +2595,7 @@ await gw.call(goal_id="g1", agent_id="a1", tool="read")</pre>
       btnEl.textContent = "RUNNING...";
       btnEl.disabled = true;
       try {
-        const res = await fetch(`/api/gateway/scenes/${encodeURIComponent(sceneId)}`, {
+        const res = await fetch(`${API_BASE}/api/gateway/scenes/${encodeURIComponent(sceneId)}`, {
           method: "POST",
         });
         const data = await res.json();
@@ -2607,7 +2617,7 @@ await gw.call(goal_id="g1", agent_id="a1", tool="read")</pre>
       btn.disabled = true;
       btn.textContent = "APPROVING...";
       try {
-        const res = await fetch(`/api/approvals/${encodeURIComponent(state.pendingApprovalId)}/approve`, {
+        const res = await fetch(`${API_BASE}/api/approvals/${encodeURIComponent(state.pendingApprovalId)}/approve`, {
           method: "POST",
         });
         const data = await res.json();
@@ -2639,7 +2649,7 @@ await gw.call(goal_id="g1", agent_id="a1", tool="read")</pre>
     document.getElementById("save-groq-btn").addEventListener("click", async () => {
       const apiKey = document.getElementById("groq-key-input").value.trim();
       const model = document.getElementById("groq-model-select").value;
-      const res = await fetch("/api/config/groq", {
+      const res = await fetch(`${API_BASE}/api/config/groq`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ api_key: apiKey, model }),
