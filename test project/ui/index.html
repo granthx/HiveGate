@@ -113,9 +113,20 @@
     }
 
     .brand-mark {
-      font-size: clamp(1.6rem, 2.5vw, 2.2rem);
+      font-size: clamp(1.4rem, 2.2vw, 2rem);
       line-height: 1;
       text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .brand-detail {
+      font-family: var(--font-mono);
+      font-size: clamp(11px, 1vw, 13px);
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+      white-space: nowrap;
     }
 
     .edition-tag {
@@ -1194,7 +1205,8 @@
     <!-- 1. MASTHEAD (1 line — single unified frontend, no :8000 chip) -->
     <header class="masthead">
       <div class="masthead-left">
-        <span class="brand-mark riso-title">ZIFI</span>
+        <span class="brand-mark riso-title">HiveGate</span>
+        <span class="brand-detail">- Agent Swarm Gateway</span>
         <span class="edition-tag" id="edition-counter">print no. 001</span>
       </div>
 
@@ -1227,7 +1239,7 @@
     </header>
 
     <!-- 2. ADDRESS BAR (1 line) -->
-    <section class="address-bar" aria-label="Zifi Browser Target Address Bar">
+    <section class="address-bar" aria-label="HiveGate Browser Target Address Bar">
       <div class="addr-tag">URL</div>
       <input
         type="text"
@@ -1294,7 +1306,7 @@
               id="zifi-iframe"
               class="zifi-iframe"
               src="/targets/aegis-store/index.html"
-              title="Zifi Live Target Sandbox"
+              title="HiveGate Live Target Sandbox"
             ></iframe>
           </div>
         </div>
@@ -1335,7 +1347,7 @@
           </div>
 
           <div class="verdict-summary" id="verdict-summary-text">
-            Paste any target URL and press <strong>RUN AUDIT</strong>. Zifi runs a two-pass print: Fluoro Pink exposes raw multi-agent failures; Teal proves Agent Gateway protection.
+            Paste any target URL and press <strong>RUN AUDIT</strong>. HiveGate runs a two-pass print: Fluoro Pink exposes raw multi-agent failures; Teal proves Agent Gateway protection.
           </div>
 
           <div class="approval-box" id="approval-box">
@@ -1866,7 +1878,7 @@ await gw.call(goal_id="g1", agent_id="a1", tool="read")</pre>
       document.getElementById("metric-errors").innerHTML = `<span class="dither-placeholder">░░░░ → ░░░░</span>`;
       document.getElementById("metric-lost").innerHTML = `<span class="dither-placeholder">░░░░ → ░░░░</span>`;
       document.getElementById("verdict-summary-text").textContent =
-        "Paste any target URL and press RUN AUDIT. Zifi runs a two-pass print: Fluoro Pink exposes raw multi-agent failures; Teal proves Agent Gateway protection.";
+        "Paste any target URL and press RUN AUDIT. HiveGate runs a two-pass print: Fluoro Pink exposes raw multi-agent failures; Teal proves Agent Gateway protection.";
       document.getElementById("calls-avoided-foot").textContent = "avoided: --";
       document.getElementById("approval-box").classList.remove("visible");
 
